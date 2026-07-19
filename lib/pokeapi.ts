@@ -47,6 +47,8 @@ export interface Variant {
   key: string;
   label: string;
   image: string;
+  /** Shiny (schillernde) coloration of the same form. */
+  shinyImage: string;
   types: TypeName[];
   effectiveness: EffectivenessBucket[];
   stats: StatSet;
@@ -131,6 +133,10 @@ export function artworkUrl(pokemonId: number): string {
   return `${SPRITES}/other/official-artwork/${pokemonId}.png`;
 }
 
+export function shinyArtworkUrl(pokemonId: number): string {
+  return `${SPRITES}/other/official-artwork/shiny/${pokemonId}.png`;
+}
+
 export function spriteUrl(pokemonId: number): string {
   return `${SPRITES}/${pokemonId}.png`;
 }
@@ -145,7 +151,9 @@ interface ApiPokemon {
   id: number;
   types: { slot: number; type: { name: string } }[];
   stats: { base_stat: number; stat: { name: string } }[];
-  sprites: { other?: { ["official-artwork"]?: { front_default?: string | null } } };
+  sprites: {
+    other?: { ["official-artwork"]?: { front_default?: string | null; front_shiny?: string | null } };
+  };
 }
 
 const STAT_KEY: Record<string, keyof StatSet> = {
@@ -295,6 +303,8 @@ export async function getPokemonPage(id: number): Promise<PokemonPage> {
         key: ref.pokemon.name,
         label: ref.is_default ? "Normal" : variantLabel(ref.pokemon.name) ?? "Form",
         image: pokemon.sprites.other?.["official-artwork"]?.front_default ?? artworkUrl(pokemon.id),
+        shinyImage:
+          pokemon.sprites.other?.["official-artwork"]?.front_shiny ?? shinyArtworkUrl(pokemon.id),
         types,
         effectiveness: computeEffectiveness(types),
         stats: toStatSet(pokemon.stats),

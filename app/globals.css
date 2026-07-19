@@ -445,6 +445,42 @@ button.type-badge:active {
   height: auto;
 }
 
+.shiny-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow-1);
+  transition:
+    transform 0.1s,
+    color 0.15s,
+    background 0.15s;
+}
+
+.shiny-toggle svg {
+  width: 26px;
+  height: 26px;
+}
+
+.shiny-toggle:active {
+  transform: scale(0.92);
+}
+
+.shiny-toggle.active {
+  background: linear-gradient(150deg, #ffe28a, var(--poke-yellow));
+  color: #7a5c00;
+  box-shadow:
+    var(--shadow-1),
+    0 0 0 3px rgba(255, 203, 5, 0.35);
+}
+
 .variants {
   display: flex;
   gap: 10px;
