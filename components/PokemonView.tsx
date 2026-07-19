@@ -31,7 +31,7 @@ interface Props {
 
 /**
  * Hero + effectiveness with client-side variant switching:
- * Mega/Gigadynamax forms swap artwork, typing, and effectiveness live.
+ * Mega/Gigadynamax/regional forms swap artwork, typing, and effectiveness live.
  */
 export function PokemonView({ name, dexNo, variants, encounters, evolution }: Props) {
   const [activeKey, setActiveKey] = useState(variants[0].key);

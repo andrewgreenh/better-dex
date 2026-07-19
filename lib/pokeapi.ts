@@ -253,9 +253,19 @@ const VARIANT_LABELS: [RegExp, string][] = [
   [/-mega-y$/, "Mega Y"],
   [/-mega$/, "Mega"],
   [/-gmax$/, "Gigadynamax"],
+  [/-alola$/, "Alola"],
+  // Galarian Darmanitan is "darmanitan-galar-standard" (its Zen mode is a battle form we skip).
+  [/-galar(-standard)?$/, "Galar"],
+  [/-hisui$/, "Hisui"],
+  [/-paldea$/, "Paldea"],
+  [/-paldea-combat-breed$/, "Paldea (Gefecht)"],
+  [/-paldea-blaze-breed$/, "Paldea (Flamme)"],
+  [/-paldea-aqua-breed$/, "Paldea (Aqua)"],
 ];
 
 function variantLabel(pokemonName: string): string | null {
+  // Totem battle forms ("raticate-totem-alola") would otherwise match the regional suffixes.
+  if (pokemonName.includes("totem")) return null;
   for (const [pattern, label] of VARIANT_LABELS) {
     if (pattern.test(pokemonName)) return label;
   }
@@ -311,8 +321,21 @@ export async function getPokemonPage(id: number): Promise<PokemonPage> {
       };
     }),
   );
-  // Default form first, then Mega X/Y/Mega, then Gigadynamax.
-  const order = ["Normal", "Mega", "Mega X", "Mega Y", "Gigadynamax"];
+  // Default form first, then regional forms, then Mega X/Y/Mega, then Gigadynamax.
+  const order = [
+    "Normal",
+    "Alola",
+    "Galar",
+    "Hisui",
+    "Paldea",
+    "Paldea (Gefecht)",
+    "Paldea (Flamme)",
+    "Paldea (Aqua)",
+    "Mega",
+    "Mega X",
+    "Mega Y",
+    "Gigadynamax",
+  ];
   variants.sort((a, b) => order.indexOf(a.label) - order.indexOf(b.label));
 
   let evolution: EvolutionNode;
