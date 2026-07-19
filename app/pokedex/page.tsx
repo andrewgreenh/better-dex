@@ -1,0 +1,32 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { getGermanNames, spriteUrl } from "@/lib/pokeapi";
+
+export const metadata: Metadata = {
+  title: "Alle Pokémon – Better Dex",
+};
+
+export default async function PokedexPage() {
+  const names = await getGermanNames();
+  const entries = Object.entries(names)
+    .map(([id, name]) => ({ id: Number(id), name }))
+    .sort((a, b) => a.id - b.id);
+
+  return (
+    <main className="content-page">
+      <div className="page-head">
+        <h1>Alle Pokémon</h1>
+      </div>
+      <div className="dex-grid">
+        {entries.map((entry) => (
+          <Link key={entry.id} className="dex-cell" href={`/pokemon/${entry.id}`}>
+            <Image src={spriteUrl(entry.id)} alt="" width={56} height={56} />
+            <b>{entry.name}</b>
+            <span>#{String(entry.id).padStart(4, "0")}</span>
+          </Link>
+        ))}
+      </div>
+    </main>
+  );
+}

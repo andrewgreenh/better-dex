@@ -130,6 +130,26 @@ export function ChevronRightIcon() {
   );
 }
 
+export function GridIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <rect x="3" y="3" width="8" height="8" rx="2.5" />
+      <rect x="13" y="3" width="8" height="8" rx="2.5" />
+      <rect x="3" y="13" width="8" height="8" rx="2.5" />
+      <rect x="13" y="13" width="8" height="8" rx="2.5" />
+    </svg>
+  );
+}
+
+export function MatrixIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="4" strokeWidth="2.6" />
+      <path d="M9.5 3v18M3 9.5h18" strokeWidth="2.6" />
+    </svg>
+  );
+}
+
 export function ArrowRightIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">

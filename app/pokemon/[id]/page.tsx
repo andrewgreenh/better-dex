@@ -33,13 +33,13 @@ export default async function PokemonPage({ params }: { params: Promise<{ id: st
 
   return (
     <main>
+      <DexNav prev={page.prev} next={page.next} />
       <PokemonView
         name={page.name}
         dexNo={`#${String(page.id).padStart(4, "0")}`}
         variants={page.variants}
         evolution={<EvolutionChain root={page.evolution} currentId={page.id} />}
       />
-      <DexNav prev={page.prev} next={page.next} />
     </main>
   );
 }

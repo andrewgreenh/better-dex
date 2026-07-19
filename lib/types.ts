@@ -46,7 +46,7 @@ export const TYPE_NAMES_DE: Record<TypeName, string> = {
  * Gen 6+ type chart: TYPE_CHART[attacker][defender] — only non-1× entries.
  * Static game data, so no API round-trips needed.
  */
-const TYPE_CHART: Record<TypeName, Partial<Record<TypeName, number>>> = {
+export const TYPE_CHART: Record<TypeName, Partial<Record<TypeName, number>>> = {
   normal: { rock: 0.5, ghost: 0, steel: 0.5 },
   fire: { fire: 0.5, water: 0.5, grass: 2, ice: 2, bug: 2, rock: 0.5, dragon: 0.5, steel: 2 },
   water: { fire: 2, water: 0.5, grass: 0.5, ground: 2, rock: 2, dragon: 0.5 },

@@ -137,6 +137,45 @@ img {
   }
 }
 
+.top-links {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--tap-min);
+  padding: 0 16px;
+  background: var(--surface);
+  border-radius: 999px;
+  box-shadow: var(--shadow-1);
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+.nav-pill svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+@media (max-width: 520px) {
+  .logo-text {
+    display: none;
+  }
+
+  .nav-pill {
+    padding: 0 13px;
+  }
+
+  .nav-pill span {
+    display: none;
+  }
+}
+
 /* ============ Type badge ============ */
 .type-badge {
   display: inline-flex;
@@ -221,7 +260,7 @@ img {
 .dex-page {
   max-width: 1240px;
   margin: 0 auto;
-  padding: 0 16px 130px;
+  padding: 0 16px 24px;
   display: grid;
   gap: 16px;
 }
@@ -503,27 +542,13 @@ img {
   align-items: center;
 }
 
-/* ============ Prev/next navigation ============ */
+/* ============ Prev/next navigation (above the content) ============ */
 .dex-nav {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
   display: flex;
   gap: 12px;
-  padding: 10px 16px calc(14px + env(safe-area-inset-bottom));
-  background: linear-gradient(transparent, var(--bg) 40%);
+  padding: 0 16px 14px;
   max-width: 1240px;
   margin: 0 auto;
-  z-index: 5;
-}
-
-@media (min-width: 1024px) {
-  .dex-nav {
-    position: static;
-    padding: 0 16px 24px;
-    background: none;
-  }
 }
 
 .nav-btn {
@@ -534,9 +559,9 @@ img {
   background: var(--surface);
   border: 3px solid var(--line);
   border-radius: var(--r-lg);
-  padding: 8px 14px;
-  min-height: 72px;
-  box-shadow: var(--shadow-2);
+  padding: 6px 14px;
+  min-height: 64px;
+  box-shadow: var(--shadow-1);
   transition: transform 0.1s;
 }
 
@@ -589,6 +614,237 @@ img {
 .nav-btn b {
   font-size: 16px;
   font-weight: 800;
+}
+
+/* ============ Content pages (Typen, Pokédex-Liste) ============ */
+.content-page {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 16px 32px;
+}
+
+.page-head {
+  padding: 4px 4px 14px;
+}
+
+.page-head h1 {
+  font-size: clamp(26px, 5vw, 34px);
+  font-weight: 800;
+}
+
+.page-head p {
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  max-width: 620px;
+}
+
+/* ============ Type matrix ============ */
+.matrix-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.matrix-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.matrix-legend i,
+.matrix td {
+  font-style: normal;
+}
+
+.matrix-legend i {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 900;
+  font-size: 14px;
+}
+
+.matrix-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+  padding: 12px;
+}
+
+.matrix-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.matrix {
+  border-collapse: separate;
+  border-spacing: 3px;
+}
+
+.matrix th {
+  font-weight: 800;
+}
+
+.matrix thead th {
+  vertical-align: bottom;
+  padding-bottom: 2px;
+}
+
+.matrix .corner {
+  min-width: 128px;
+  text-align: left;
+  font-size: 11px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  vertical-align: bottom;
+}
+
+.matrix .corner span {
+  display: block;
+}
+
+.matrix tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--surface);
+  text-align: left;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.matrix tbody th,
+.matrix .mname {
+  font-size: 13px;
+}
+
+.matrix tbody th > * {
+  vertical-align: middle;
+}
+
+.mchip {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #fff;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
+}
+
+.mchip.t-electric,
+.mchip.t-ice,
+.mchip.t-ground,
+.mchip.t-steel {
+  color: #3a3410;
+}
+
+.mchip svg {
+  width: 17px;
+  height: 17px;
+}
+
+.matrix tbody th .mchip {
+  margin-right: 7px;
+}
+
+.matrix td {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 900;
+  font-size: 14px;
+  color: #fff;
+}
+
+.m-1 {
+  background: var(--surface-2);
+}
+
+.m-2 {
+  background: var(--eff-2x);
+}
+
+.m-05 {
+  background: var(--eff-half);
+}
+
+.m-0 {
+  background: var(--eff-zero);
+}
+
+@media (max-width: 640px) {
+  .matrix .corner {
+    min-width: 44px;
+  }
+
+  .matrix .mname {
+    display: none;
+  }
+
+  .matrix tbody th .mchip {
+    margin-right: 0;
+  }
+}
+
+/* ============ Dense Pokédex grid ============ */
+.dex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(94px, 1fr));
+  gap: 8px;
+}
+
+.dex-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  background: var(--surface);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-1);
+  padding: 8px 4px 7px;
+  text-align: center;
+  min-width: 0;
+}
+
+.dex-cell:hover {
+  box-shadow: var(--shadow-2);
+}
+
+.dex-cell:active {
+  transform: scale(0.95);
+}
+
+.dex-cell img {
+  width: 56px;
+  height: 56px;
+  image-rendering: pixelated;
+}
+
+.dex-cell b {
+  font-size: 11.5px;
+  font-weight: 800;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dex-cell span {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-soft);
 }
 
 /* ============ Search overlay ============ */
