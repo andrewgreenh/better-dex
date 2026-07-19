@@ -59,8 +59,14 @@ html {
 body {
   background: linear-gradient(160deg, #fdeee4 0%, var(--bg) 30%) fixed;
   color: var(--ink);
-  font-family: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito",
-    -apple-system, "Segoe UI", sans-serif;
+  font-family:
+    ui-rounded,
+    "SF Pro Rounded",
+    "Arial Rounded MT Bold",
+    "Nunito",
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   min-height: 100dvh;
 }
@@ -188,7 +194,9 @@ img {
   font-weight: 800;
   font-size: 17px;
   letter-spacing: 0.3px;
-  box-shadow: var(--shadow-1), inset 0 -3px 0 rgba(0, 0, 0, 0.15);
+  box-shadow:
+    var(--shadow-1),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.15);
 }
 
 .type-badge .ticon {
@@ -237,24 +245,60 @@ img {
   background: rgba(255, 255, 255, 0.45);
 }
 
-.t-normal { background: var(--type-normal); }
-.t-fire { background: var(--type-fire); }
-.t-water { background: var(--type-water); }
-.t-electric { background: var(--type-electric); }
-.t-grass { background: var(--type-grass); }
-.t-ice { background: var(--type-ice); }
-.t-fighting { background: var(--type-fighting); }
-.t-poison { background: var(--type-poison); }
-.t-ground { background: var(--type-ground); }
-.t-flying { background: var(--type-flying); }
-.t-psychic { background: var(--type-psychic); }
-.t-bug { background: var(--type-bug); }
-.t-rock { background: var(--type-rock); }
-.t-ghost { background: var(--type-ghost); }
-.t-dragon { background: var(--type-dragon); }
-.t-dark { background: var(--type-dark); }
-.t-steel { background: var(--type-steel); }
-.t-fairy { background: var(--type-fairy); }
+.t-normal {
+  background: var(--type-normal);
+}
+.t-fire {
+  background: var(--type-fire);
+}
+.t-water {
+  background: var(--type-water);
+}
+.t-electric {
+  background: var(--type-electric);
+}
+.t-grass {
+  background: var(--type-grass);
+}
+.t-ice {
+  background: var(--type-ice);
+}
+.t-fighting {
+  background: var(--type-fighting);
+}
+.t-poison {
+  background: var(--type-poison);
+}
+.t-ground {
+  background: var(--type-ground);
+}
+.t-flying {
+  background: var(--type-flying);
+}
+.t-psychic {
+  background: var(--type-psychic);
+}
+.t-bug {
+  background: var(--type-bug);
+}
+.t-rock {
+  background: var(--type-rock);
+}
+.t-ghost {
+  background: var(--type-ghost);
+}
+.t-dragon {
+  background: var(--type-dragon);
+}
+.t-dark {
+  background: var(--type-dark);
+}
+.t-steel {
+  background: var(--type-steel);
+}
+.t-fairy {
+  background: var(--type-fairy);
+}
 
 /* ============ Page layout ============ */
 .dex-page {
@@ -300,6 +344,7 @@ img {
   height: 260px;
   background: radial-gradient(circle, rgba(238, 129, 48, 0.15) 0 60%, transparent 62%);
   border-radius: 50%;
+  pointer-events: none;
 }
 
 .hero-top {
@@ -894,7 +939,9 @@ img {
 .matrix td,
 .matrix th {
   cursor: pointer;
-  transition: opacity 0.12s, box-shadow 0.12s;
+  transition:
+    opacity 0.12s,
+    box-shadow 0.12s;
 }
 
 .matrix .corner {
