@@ -19,6 +19,7 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DATA = join(root, "src", "generated", "dex.json");
 const OUT_IMAGES = join(root, "public", "image-manifest.json");
+const OUT_SEARCH_INDEX = join(root, "public", "api", "search-index");
 const CACHE_DIR = join(root, "node_modules", ".cache", "dexgen");
 
 const API = "https://pokeapi.co/api/v2";
@@ -27,7 +28,12 @@ const SPECIES_NAMES_CSV =
 const SPRITES = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon";
 const GERMAN_LANGUAGE_ID = 6;
 
-if (process.argv.includes("--skip-if-exists") && existsSync(OUT_DATA) && existsSync(OUT_IMAGES)) {
+if (
+  process.argv.includes("--skip-if-exists") &&
+  existsSync(OUT_DATA) &&
+  existsSync(OUT_IMAGES) &&
+  existsSync(OUT_SEARCH_INDEX)
+) {
   console.log("dex-data: bundle exists, skipping (run `npm run data` to refresh)");
   process.exit(0);
 }
@@ -324,6 +330,14 @@ const imageManifest = {
   ],
 };
 writeFileSync(OUT_IMAGES, JSON.stringify(imageManifest));
+
+// Route compatibility: the Next.js version of the app served its search index
+// at /api/search-index; old cached clients may still fetch it mid-migration.
+mkdirSync(dirname(OUT_SEARCH_INDEX), { recursive: true });
+writeFileSync(
+  OUT_SEARCH_INDEX,
+  JSON.stringify(pokemon.map((p) => ({ id: p.id, name: p.name, sprite: `${SPRITES}/${p.id}.png` }))),
+);
 
 console.log(
   `dex-data: wrote ${(dexJson.length / 1024).toFixed(0)} KB bundle, ` +

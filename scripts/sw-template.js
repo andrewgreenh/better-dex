@@ -34,7 +34,9 @@ self.addEventListener("activate", (event) => {
       const keys = await caches.keys();
       await Promise.all(
         keys
-          .filter((key) => key.startsWith("shell-") && key !== SHELL_CACHE)
+          // "pages-*" are page caches of the old Next.js version of the app —
+          // cleaned up on migration. The image cache (images-v1) is kept.
+          .filter((key) => (key.startsWith("shell-") && key !== SHELL_CACHE) || key.startsWith("pages-"))
           .map((key) => caches.delete(key)),
       );
       await self.clients.claim();

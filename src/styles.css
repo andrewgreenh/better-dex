@@ -1531,3 +1531,27 @@ button.type-badge:active {
   font-weight: 700;
   color: var(--ink-soft);
 }
+
+/* Vite SPA additions: the root wrapper must not affect layout, and the
+   one-time data-bundle splash gets a minimal centered look. */
+#root {
+  display: contents;
+}
+
+.app-splash {
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  justify-items: center;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.app-splash button {
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--poke-red);
+  color: #fff;
+  font-weight: 800;
+}
