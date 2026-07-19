@@ -4,7 +4,31 @@ import { computeEffectiveness, type EffectivenessBucket, type TypeName } from ".
 const API = "https://pokeapi.co/api/v2";
 const SPECIES_NAMES_CSV =
   "https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data/v2/csv/pokemon_species_names.csv";
+const POKEMON_TYPES_CSV =
+  "https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data/v2/csv/pokemon_types.csv";
 const SPRITES = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon";
+
+/** PokeAPI numeric type ids (order differs from our display order). */
+const TYPE_BY_ID: Record<number, TypeName> = {
+  1: "normal",
+  2: "fighting",
+  3: "flying",
+  4: "poison",
+  5: "ground",
+  6: "rock",
+  7: "bug",
+  8: "ghost",
+  9: "steel",
+  10: "fire",
+  11: "water",
+  12: "grass",
+  13: "electric",
+  14: "psychic",
+  15: "ice",
+  16: "dragon",
+  17: "fairy",
+  18: "dark",
+};
 
 const GERMAN_LANGUAGE_ID = 6;
 
@@ -62,6 +86,28 @@ export async function getGermanNames(): Promise<Record<number, string>> {
     }
   }
   return names;
+}
+
+/**
+ * Types of every default-form Pokémon (species id → type names, slot order),
+ * parsed from the PokeAPI CSV — one request instead of 1025.
+ */
+export async function getTypesMap(): Promise<Record<number, TypeName[]>> {
+  "use cache";
+  cacheLife("max");
+  const names = await getGermanNames();
+  const res = await fetch(POKEMON_TYPES_CSV);
+  if (!res.ok) throw new Error(`${res.status} for pokemon types CSV`);
+  const csv = await res.text();
+  const map: Record<number, TypeName[]> = {};
+  for (const line of csv.split("\n")) {
+    // pokemon_id,type_id,slot — default forms share the species id.
+    const [pokemonId, typeId, slot] = line.split(",").map(Number);
+    const type = TYPE_BY_ID[typeId];
+    if (!type || !names[pokemonId]) continue;
+    (map[pokemonId] ??= [])[slot - 1] = type;
+  }
+  return map;
 }
 
 export async function getAllSpeciesIds(): Promise<number[]> {

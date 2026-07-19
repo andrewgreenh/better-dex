@@ -994,6 +994,105 @@ button.type-badge:active {
   }
 }
 
+/* ============ Type filter (Pokédex list) ============ */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 38px;
+  padding: 0 12px 0 6px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: var(--shadow-1);
+  transition:
+    transform 0.1s,
+    background 0.15s,
+    color 0.15s;
+}
+
+/* Inactive look only — when active, the .t-<type> class provides the background. */
+.filter-pill:not(.on) {
+  background: var(--surface);
+  color: var(--ink-soft);
+}
+
+.filter-pill:active {
+  transform: scale(0.94);
+}
+
+.filter-pill .ticon {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-2);
+  border-radius: 50%;
+  flex: none;
+  color: var(--ink-soft);
+}
+
+.filter-pill .ticon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.filter-pill.on {
+  color: #fff;
+  box-shadow:
+    var(--shadow-1),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.15);
+}
+
+.filter-pill.on .ticon {
+  background: rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+
+.filter-pill.on.t-electric,
+.filter-pill.on.t-ice,
+.filter-pill.on.t-ground,
+.filter-pill.on.t-steel {
+  color: #3a3410;
+}
+
+.filter-pill.on.t-electric .ticon,
+.filter-pill.on.t-ice .ticon,
+.filter-pill.on.t-ground .ticon,
+.filter-pill.on.t-steel .ticon {
+  background: rgba(255, 255, 255, 0.45);
+  color: #3a3410;
+}
+
+.filter-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 4px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+
+.filter-clear {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 2px solid var(--line);
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+
 /* ============ Dense Pokédex grid ============ */
 .dex-grid {
   display: grid;
@@ -1016,6 +1115,11 @@ button.type-badge:active {
 
 .dex-cell:hover {
   box-shadow: var(--shadow-2);
+}
+
+/* The author display:flex above would defeat the hidden attribute. */
+.dex-cell[hidden] {
+  display: none;
 }
 
 /* Cell of the Pokémon we arrived from (via /pokedex#p-<id>) */
