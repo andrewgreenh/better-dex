@@ -1,0 +1,67 @@
+<!-- @dsCard group="Components" name="Effectiveness panel" subtitle="Attacks against this Pokémon · 4× / 2× / ½× / ¼× / 0× buckets" -->
+<style>
+  .eff-panel { max-width: 640px; }
+  .eff-group { display: flex; align-items: flex-start; gap: 14px; padding: 12px 0; border-bottom: 2px dashed var(--line); }
+  .eff-group:last-child { border-bottom: 0; }
+  .eff-mult {
+    flex: none; width: 74px; height: 48px;
+    display: grid; place-items: center;
+    border-radius: var(--r-sm);
+    color: #fff; font-weight: 900; font-size: 20px;
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,.18);
+  }
+  .eff-label { flex: none; width: 118px; padding-top: 4px; font-size: 13px; font-weight: 800; color: var(--ink-soft); line-height: 1.3; }
+  .eff-types { display: flex; flex-wrap: wrap; gap: 8px; }
+</style>
+
+<div class="card eff-panel">
+  <h3>Attacks against Charizard</h3>
+
+  <div class="eff-group">
+    <div class="eff-mult" style="background:var(--eff-4x)">4×</div>
+    <div class="eff-label">Super weak<br>Watch out!</div>
+    <div class="eff-types">
+      <span class="type-badge sm t-rock"><span class="ticon"><svg><use href="#t-rock"/></svg></span>Rock</span>
+    </div>
+  </div>
+
+  <div class="eff-group">
+    <div class="eff-mult" style="background:var(--eff-2x)">2×</div>
+    <div class="eff-label">Weak</div>
+    <div class="eff-types">
+      <span class="type-badge sm t-water"><span class="ticon"><svg><use href="#t-water"/></svg></span>Water</span>
+      <span class="type-badge sm t-electric"><span class="ticon"><svg><use href="#t-electric"/></svg></span>Electric</span>
+    </div>
+  </div>
+
+  <div class="eff-group">
+    <div class="eff-mult" style="background:var(--eff-half)">½×</div>
+    <div class="eff-label">Resists</div>
+    <div class="eff-types">
+      <span class="type-badge sm t-fire"><span class="ticon"><svg><use href="#t-fire"/></svg></span>Fire</span>
+      <span class="type-badge sm t-fighting"><span class="ticon"><svg><use href="#t-fighting"/></svg></span>Fighting</span>
+      <span class="type-badge sm t-steel"><span class="ticon"><svg><use href="#t-steel"/></svg></span>Steel</span>
+      <span class="type-badge sm t-fairy"><span class="ticon"><svg><use href="#t-fairy"/></svg></span>Fairy</span>
+    </div>
+  </div>
+
+  <div class="eff-group">
+    <div class="eff-mult" style="background:var(--eff-quart)">¼×</div>
+    <div class="eff-label">Resists a lot</div>
+    <div class="eff-types">
+      <span class="type-badge sm t-grass"><span class="ticon"><svg><use href="#t-grass"/></svg></span>Grass</span>
+      <span class="type-badge sm t-bug"><span class="ticon"><svg><use href="#t-bug"/></svg></span>Bug</span>
+    </div>
+  </div>
+
+  <div class="eff-group">
+    <div class="eff-mult" style="background:var(--eff-zero)">0×</div>
+    <div class="eff-label">No effect!</div>
+    <div class="eff-types">
+      <span class="type-badge sm t-ground"><span class="ticon"><svg><use href="#t-ground"/></svg></span>Ground</span>
+    </div>
+  </div>
+</div>
+<p style="margin-top:14px;font-size:13px;color:var(--ink-soft);font-weight:600;max-width:640px;">
+  Multipliers are computed from the combined dual typing (here Fire/Flying), so 4× and ¼× buckets appear automatically. Empty buckets are hidden in the app.
+</p>

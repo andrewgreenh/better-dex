@@ -1,0 +1,168 @@
+/* ============================================================
+   Better Pokédex — Design Tokens & Shared Components
+   Kid-friendly, touch-first. Min touch target 48px.
+   ============================================================ */
+
+:root {
+  /* --- Pokémon type colors --- */
+  --type-normal:   #A8A77A;
+  --type-fire:     #EE8130;
+  --type-water:    #6390F0;
+  --type-electric: #F7D02C;
+  --type-grass:    #7AC74C;
+  --type-ice:      #96D9D6;
+  --type-fighting: #C22E28;
+  --type-poison:   #A33EA1;
+  --type-ground:   #E2BF65;
+  --type-flying:   #A98FF3;
+  --type-psychic:  #F95587;
+  --type-bug:      #A6B91A;
+  --type-rock:     #B6A136;
+  --type-ghost:    #735797;
+  --type-dragon:   #6F35FC;
+  --type-dark:     #705746;
+  --type-steel:    #B7B7CE;
+  --type-fairy:    #D685AD;
+
+  /* --- UI neutrals --- */
+  --bg:        #F2F5FA;
+  --surface:   #FFFFFF;
+  --surface-2: #E9EEF6;
+  --ink:       #1E2A3A;
+  --ink-soft:  #5A6B80;
+  --line:      #D8E0EC;
+
+  /* --- Accents --- */
+  --poke-red:    #E3350D;
+  --poke-yellow: #FFCB05;
+  --poke-blue:   #2A75BB;
+
+  /* --- Effectiveness --- */
+  --eff-4x:    #D63031;
+  --eff-2x:    #E17055;
+  --eff-half:  #00B894;
+  --eff-quart: #00997A;
+  --eff-zero:  #636E72;
+
+  /* --- Shape & depth --- */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --shadow-1: 0 2px 6px rgba(30, 42, 58, .08);
+  --shadow-2: 0 6px 18px rgba(30, 42, 58, .14);
+
+  /* --- Touch --- */
+  --tap-min: 48px;
+
+  font-family: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito", -apple-system, "Segoe UI", sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+  padding: 24px;
+}
+
+/* ============ Type badge ============ */
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px 0 10px;
+  height: var(--tap-min);
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: .3px;
+  text-transform: capitalize;
+  box-shadow: var(--shadow-1), inset 0 -3px 0 rgba(0,0,0,.15);
+}
+.type-badge .ticon {
+  width: 30px; height: 30px;
+  display: grid; place-items: center;
+  background: rgba(255,255,255,.28);
+  border-radius: 50%;
+  flex: none;
+}
+.type-badge .ticon svg { width: 18px; height: 18px; fill: #fff; stroke: #fff; }
+.type-badge.sm { height: 36px; font-size: 14px; gap: 6px; padding: 0 12px 0 6px; }
+.type-badge.sm .ticon { width: 24px; height: 24px; }
+.type-badge.sm .ticon svg { width: 14px; height: 14px; }
+
+/* dark text for light badge colors */
+.type-badge.t-electric, .type-badge.t-ice, .type-badge.t-ground, .type-badge.t-steel {
+  color: #3A3410;
+  text-shadow: none;
+}
+.type-badge.t-electric .ticon svg, .type-badge.t-ice .ticon svg,
+.type-badge.t-ground .ticon svg, .type-badge.t-steel .ticon svg { fill: #3A3410; stroke: #3A3410; }
+.type-badge.t-electric .ticon, .type-badge.t-ice .ticon,
+.type-badge.t-ground .ticon, .type-badge.t-steel .ticon { background: rgba(255,255,255,.45); }
+
+.t-normal   { background: var(--type-normal); }
+.t-fire     { background: var(--type-fire); }
+.t-water    { background: var(--type-water); }
+.t-electric { background: var(--type-electric); }
+.t-grass    { background: var(--type-grass); }
+.t-ice      { background: var(--type-ice); }
+.t-fighting { background: var(--type-fighting); }
+.t-poison   { background: var(--type-poison); }
+.t-ground   { background: var(--type-ground); }
+.t-flying   { background: var(--type-flying); }
+.t-psychic  { background: var(--type-psychic); }
+.t-bug      { background: var(--type-bug); }
+.t-rock     { background: var(--type-rock); }
+.t-ghost    { background: var(--type-ghost); }
+.t-dragon   { background: var(--type-dragon); }
+.t-dark     { background: var(--type-dark); }
+.t-steel    { background: var(--type-steel); }
+.t-fairy    { background: var(--type-fairy); }
+
+/* ============ Cards ============ */
+.card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+  padding: 20px;
+}
+.card h3 {
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+}
+
+/* ============ Variant chips ============ */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--tap-min);
+  padding: 0 20px;
+  border-radius: 999px;
+  border: 3px solid var(--line);
+  background: var(--surface);
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--ink-soft);
+}
+.chip.active {
+  border-color: var(--poke-red);
+  background: #FFF1EC;
+  color: var(--poke-red);
+}
+
+/* ============ Placeholder monster art ============ */
+.mon {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+.mon svg { width: 78%; height: 78%; }

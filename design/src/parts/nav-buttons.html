@@ -1,0 +1,48 @@
+<!-- @dsCard group="Components" name="Dex navigation" subtitle="Prev/next with preview art · 64px+ touch targets" -->
+<style>
+  .nav-demo { display: flex; gap: 16px; max-width: 720px; }
+  .nav-btn {
+    flex: 1;
+    display: flex; align-items: center; gap: 14px;
+    background: var(--surface);
+    border: 3px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 12px 16px;
+    min-height: 88px;
+    box-shadow: var(--shadow-1);
+    cursor: pointer;
+  }
+  .nav-btn:active { transform: scale(.97); }
+  .nav-btn.next { flex-direction: row-reverse; text-align: right; }
+  .nav-btn .chev { flex: none; width: 34px; height: 34px; }
+  .nav-btn .chev svg { width: 100%; height: 100%; stroke: var(--ink-soft); }
+  .nav-btn .mon { width: 64px; height: 64px; background: var(--surface-2); flex: none; }
+  .nav-btn .txt { flex: 1; min-width: 0; }
+  .nav-btn .txt small { display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); }
+  .nav-btn .txt b { display: block; font-size: 19px; font-weight: 800; }
+  .nav-btn .txt .no { font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+</style>
+
+<div class="nav-demo">
+  <button class="nav-btn prev">
+    <span class="chev"><svg><use href="#ui-chevron-left"/></svg></span>
+    <span class="mon"><svg><use href="#mon-leaf"/></svg></span>
+    <span class="txt">
+      <small>Previous</small>
+      <b>Charmeleon</b>
+      <span class="no">#0005</span>
+    </span>
+  </button>
+  <button class="nav-btn next">
+    <span class="chev"><svg><use href="#ui-chevron-right"/></svg></span>
+    <span class="mon"><svg><use href="#mon-aqua"/></svg></span>
+    <span class="txt">
+      <small>Next</small>
+      <b>Squirtle</b>
+      <span class="no">#0007</span>
+    </span>
+  </button>
+</div>
+<p style="margin-top:14px;font-size:13px;color:var(--ink-soft);font-weight:600;max-width:720px;">
+  The preview art shows <em>where you're going</em>, so kids can flip through the dex like a picture book. Whole card is the tap target (88px tall). On phone these dock to a sticky bottom bar; on iPad they sit at the screen edges. Swipe left/right anywhere also navigates.
+</p>

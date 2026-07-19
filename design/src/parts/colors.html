@@ -1,0 +1,63 @@
+<!-- @dsCard group="Foundations" name="Colors" subtitle="18 type colors, UI neutrals, effectiveness scale" -->
+<style>
+  .swatch-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .swatch {
+    border-radius: var(--r-md);
+    height: 76px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 8px 10px;
+    color: #fff; font-weight: 800; font-size: 13px; text-transform: capitalize;
+    box-shadow: var(--shadow-1);
+  }
+  .swatch small { font-weight: 600; opacity: .8; font-size: 10px; text-transform: uppercase; }
+  .swatch.dark-text { color: #3A3410; }
+  .section { margin-bottom: 24px; }
+  .neutral-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .eff-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+</style>
+
+<div class="section">
+  <h3 style="font-size:14px;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-soft);margin-bottom:12px;">Type colors</h3>
+  <div class="swatch-grid">
+    <div class="swatch t-normal">normal</div>
+    <div class="swatch t-fire">fire</div>
+    <div class="swatch t-water">water</div>
+    <div class="swatch t-electric dark-text">electric</div>
+    <div class="swatch t-grass">grass</div>
+    <div class="swatch t-ice dark-text">ice</div>
+    <div class="swatch t-fighting">fighting</div>
+    <div class="swatch t-poison">poison</div>
+    <div class="swatch t-ground dark-text">ground</div>
+    <div class="swatch t-flying">flying</div>
+    <div class="swatch t-psychic">psychic</div>
+    <div class="swatch t-bug">bug</div>
+    <div class="swatch t-rock">rock</div>
+    <div class="swatch t-ghost">ghost</div>
+    <div class="swatch t-dragon">dragon</div>
+    <div class="swatch t-dark">dark</div>
+    <div class="swatch t-steel dark-text">steel</div>
+    <div class="swatch t-fairy">fairy</div>
+  </div>
+</div>
+
+<div class="section">
+  <h3 style="font-size:14px;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-soft);margin-bottom:12px;">UI neutrals &amp; brand</h3>
+  <div class="neutral-row">
+    <div class="swatch" style="background:var(--bg);color:var(--ink);border:2px solid var(--line)">Background<small>#F2F5FA</small></div>
+    <div class="swatch" style="background:var(--surface);color:var(--ink);border:2px solid var(--line)">Surface<small>#FFFFFF</small></div>
+    <div class="swatch" style="background:var(--ink)">Ink<small>#1E2A3A</small></div>
+    <div class="swatch" style="background:var(--poke-red)">Poké Red<small>#E3350D</small></div>
+    <div class="swatch" style="background:var(--poke-yellow);color:#3A3410">Poké Yellow<small>#FFCB05</small></div>
+  </div>
+</div>
+
+<div class="section" style="margin-bottom:0">
+  <h3 style="font-size:14px;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-soft);margin-bottom:12px;">Effectiveness scale</h3>
+  <div class="eff-row">
+    <div class="swatch" style="background:var(--eff-4x)">4× super weak</div>
+    <div class="swatch" style="background:var(--eff-2x)">2× weak</div>
+    <div class="swatch" style="background:var(--eff-half)">½× resists</div>
+    <div class="swatch" style="background:var(--eff-quart)">¼× strong resist</div>
+    <div class="swatch" style="background:var(--eff-zero)">0× immune</div>
+  </div>
+</div>

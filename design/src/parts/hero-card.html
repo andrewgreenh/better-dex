@@ -1,0 +1,73 @@
+<!-- @dsCard group="Components" name="Hero card + variants" subtitle="Name, artwork, types, variant switcher (Mega / Gigantamax)" -->
+<style>
+  .hero {
+    max-width: 560px;
+    background: linear-gradient(160deg, #FDEEE4 0%, var(--surface) 55%);
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-2);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute; right: -70px; top: -70px;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(238,129,48,.18) 0 60%, transparent 62%);
+    border-radius: 50%;
+  }
+  .hero-top { display: flex; justify-content: space-between; align-items: baseline; }
+  .hero h1 { font-size: 40px; font-weight: 800; }
+  .hero .dexno { font-size: 22px; font-weight: 800; color: var(--ink-soft); }
+  .hero-types { display: flex; gap: 10px; margin-top: 12px; }
+  .hero-art {
+    height: 240px; display: grid; place-items: center; position: relative; z-index: 1;
+  }
+  .hero-art .mon { width: 220px; height: 220px; background: radial-gradient(circle at 50% 62%, rgba(255,255,255,.9), rgba(255,255,255,0) 70%); }
+  .variants { display: flex; gap: 10px; flex-wrap: wrap; position: relative; z-index: 1; }
+  .variant-chip { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .variant-chip .thumb {
+    width: 72px; height: 72px; border-radius: var(--r-md);
+    background: var(--surface-2); border: 3px solid var(--line);
+    display: grid; place-items: center;
+  }
+  .variant-chip .thumb svg { width: 52px; height: 52px; }
+  .variant-chip.active .thumb { border-color: var(--poke-red); background: #FFF1EC; box-shadow: var(--shadow-1); }
+  .variant-chip span { font-size: 13px; font-weight: 800; color: var(--ink-soft); }
+  .variant-chip.active span { color: var(--poke-red); }
+</style>
+
+<div class="hero">
+  <div class="hero-top">
+    <h1>Charizard</h1>
+    <span class="dexno">#0006</span>
+  </div>
+  <div class="hero-types">
+    <span class="type-badge t-fire"><span class="ticon"><svg><use href="#t-fire"/></svg></span>Fire</span>
+    <span class="type-badge t-flying"><span class="ticon"><svg><use href="#t-flying"/></svg></span>Flying</span>
+  </div>
+  <div class="hero-art">
+    <div class="mon"><svg><use href="#mon-blaze"/></svg></div>
+  </div>
+  <div class="variants">
+    <div class="variant-chip active">
+      <div class="thumb"><svg><use href="#mon-blaze"/></svg></div>
+      <span>Normal</span>
+    </div>
+    <div class="variant-chip">
+      <div class="thumb"><svg><use href="#mon-blaze"/></svg></div>
+      <span>Mega X</span>
+    </div>
+    <div class="variant-chip">
+      <div class="thumb"><svg><use href="#mon-blaze"/></svg></div>
+      <span>Mega Y</span>
+    </div>
+    <div class="variant-chip">
+      <div class="thumb"><svg><use href="#mon-blaze"/></svg></div>
+      <span>Gigantamax</span>
+    </div>
+  </div>
+</div>
+<p style="margin-top:14px;font-size:13px;color:var(--ink-soft);font-weight:600;max-width:560px;">
+  Tapping a variant swaps the big artwork, name suffix, and typing (Mega Charizard X becomes Fire/Dragon — types and effectiveness update live). Variant thumbnails are 72px — easy targets for small fingers. Card tint follows the primary type color.
+</p>

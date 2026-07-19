@@ -1,0 +1,170 @@
+<!-- @dsCard group="Screens" name="iPad · landscape" subtitle="Everything visible at once — no scrolling needed" -->
+<style>
+  body { padding: 0; }
+  .screen {
+    width: 1180px; height: 820px;
+    background: linear-gradient(160deg, #FDEEE4 0%, var(--bg) 40%);
+    display: grid;
+    grid-template-rows: 76px 1fr 104px;
+    overflow: hidden;
+  }
+  /* --- top bar --- */
+  .topbar {
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 24px;
+  }
+  .topbar .logo { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 800; }
+  .topbar .logo svg { width: 32px; height: 32px; fill: var(--poke-red); }
+  .searchbar {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 10px;
+    width: 340px; height: 52px;
+    background: var(--surface); border-radius: 999px;
+    padding: 0 20px; box-shadow: var(--shadow-1);
+    color: var(--ink-soft); font-weight: 700; font-size: 16px;
+  }
+  .searchbar svg { width: 22px; height: 22px; stroke: var(--ink-soft); }
+  /* --- main grid --- */
+  .main {
+    display: grid;
+    grid-template-columns: 460px 1fr;
+    gap: 20px;
+    padding: 0 24px;
+    min-height: 0;
+  }
+  .col { display: flex; flex-direction: column; gap: 16px; min-height: 0; }
+  /* left: hero */
+  .heroS {
+    flex: 1;
+    background: var(--surface);
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-2);
+    padding: 24px;
+    display: flex; flex-direction: column;
+  }
+  .heroS .top { display: flex; justify-content: space-between; align-items: baseline; }
+  .heroS h1 { font-size: 38px; font-weight: 800; }
+  .heroS .dexno { font-size: 20px; font-weight: 800; color: var(--ink-soft); }
+  .heroS .types { display: flex; gap: 10px; margin-top: 10px; }
+  .heroS .art { flex: 1; display: grid; place-items: center; }
+  .heroS .art .mon { width: 250px; height: 250px; background: radial-gradient(circle, #FDEEE4, transparent 70%); }
+  .heroS .variants { display: flex; gap: 10px; justify-content: center; }
+  .vchip { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .vchip .thumb { width: 64px; height: 64px; border-radius: var(--r-md); background: var(--surface-2); border: 3px solid var(--line); display: grid; place-items: center; }
+  .vchip .thumb svg { width: 46px; height: 46px; }
+  .vchip.active .thumb { border-color: var(--poke-red); background: #FFF1EC; }
+  .vchip span { font-size: 12px; font-weight: 800; color: var(--ink-soft); }
+  .vchip.active span { color: var(--poke-red); }
+  /* right: effectiveness + evolution */
+  .panel { background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--shadow-1); padding: 18px 20px; }
+  .panel h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--ink-soft); margin-bottom: 10px; }
+  .effrow { display: flex; align-items: center; gap: 12px; padding: 6px 0; }
+  .effmult { flex: none; width: 58px; height: 38px; display: grid; place-items: center; border-radius: var(--r-sm); color: #fff; font-weight: 900; font-size: 16px; }
+  .efftypes { display: flex; flex-wrap: wrap; gap: 6px; }
+  .evo { display: flex; align-items: center; gap: 4px; }
+  .estage { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 10px; border-radius: var(--r-md); }
+  .estage .mon { width: 74px; height: 74px; background: var(--surface-2); }
+  .estage.current { background: #FFF1EC; outline: 3px solid var(--poke-red); }
+  .estage b { font-size: 14px; font-weight: 800; }
+  .earrow { display: flex; flex-direction: column; align-items: center; }
+  .earrow svg { width: 24px; height: 24px; stroke: var(--ink-soft); }
+  .earrow span { font-size: 11px; font-weight: 800; background: var(--surface-2); border-radius: 999px; padding: 3px 8px; white-space: nowrap; }
+  /* --- bottom nav --- */
+  .bottomnav { display: flex; gap: 16px; padding: 12px 24px 20px; }
+  .nbtn { flex: 1; display: flex; align-items: center; gap: 12px; background: var(--surface); border: 3px solid var(--line); border-radius: var(--r-lg); padding: 8px 16px; box-shadow: var(--shadow-1); }
+  .nbtn.next { flex-direction: row-reverse; text-align: right; }
+  .nbtn .chev { width: 28px; height: 28px; flex: none; }
+  .nbtn .chev svg { width: 100%; height: 100%; stroke: var(--ink-soft); }
+  .nbtn .mon { width: 52px; height: 52px; background: var(--surface-2); flex: none; }
+  .nbtn small { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); }
+  .nbtn b { font-size: 17px; font-weight: 800; }
+</style>
+
+<div class="screen">
+  <div class="topbar">
+    <div class="logo"><svg><use href="#ui-pokeball"/></svg>Better Dex</div>
+    <div class="searchbar"><svg><use href="#ui-search"/></svg>Search Pokémon…</div>
+  </div>
+
+  <div class="main">
+    <!-- LEFT: hero -->
+    <div class="col">
+      <div class="heroS">
+        <div class="top"><h1>Charizard</h1><span class="dexno">#0006</span></div>
+        <div class="types">
+          <span class="type-badge t-fire"><span class="ticon"><svg><use href="#t-fire"/></svg></span>Fire</span>
+          <span class="type-badge t-flying"><span class="ticon"><svg><use href="#t-flying"/></svg></span>Flying</span>
+        </div>
+        <div class="art"><div class="mon"><svg><use href="#mon-blaze"/></svg></div></div>
+        <div class="variants">
+          <div class="vchip active"><div class="thumb"><svg><use href="#mon-blaze"/></svg></div><span>Normal</span></div>
+          <div class="vchip"><div class="thumb"><svg><use href="#mon-blaze"/></svg></div><span>Mega X</span></div>
+          <div class="vchip"><div class="thumb"><svg><use href="#mon-blaze"/></svg></div><span>Mega Y</span></div>
+          <div class="vchip"><div class="thumb"><svg><use href="#mon-blaze"/></svg></div><span>Gigantamax</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: effectiveness + evolution -->
+    <div class="col">
+      <div class="panel" style="flex:1">
+        <h3>Attacks against Charizard</h3>
+        <div class="effrow">
+          <div class="effmult" style="background:var(--eff-4x)">4×</div>
+          <div class="efftypes"><span class="type-badge sm t-rock"><span class="ticon"><svg><use href="#t-rock"/></svg></span>Rock</span></div>
+        </div>
+        <div class="effrow">
+          <div class="effmult" style="background:var(--eff-2x)">2×</div>
+          <div class="efftypes">
+            <span class="type-badge sm t-water"><span class="ticon"><svg><use href="#t-water"/></svg></span>Water</span>
+            <span class="type-badge sm t-electric"><span class="ticon"><svg><use href="#t-electric"/></svg></span>Electric</span>
+          </div>
+        </div>
+        <div class="effrow">
+          <div class="effmult" style="background:var(--eff-half)">½×</div>
+          <div class="efftypes">
+            <span class="type-badge sm t-fire"><span class="ticon"><svg><use href="#t-fire"/></svg></span>Fire</span>
+            <span class="type-badge sm t-fighting"><span class="ticon"><svg><use href="#t-fighting"/></svg></span>Fighting</span>
+            <span class="type-badge sm t-steel"><span class="ticon"><svg><use href="#t-steel"/></svg></span>Steel</span>
+            <span class="type-badge sm t-fairy"><span class="ticon"><svg><use href="#t-fairy"/></svg></span>Fairy</span>
+          </div>
+        </div>
+        <div class="effrow">
+          <div class="effmult" style="background:var(--eff-quart)">¼×</div>
+          <div class="efftypes">
+            <span class="type-badge sm t-grass"><span class="ticon"><svg><use href="#t-grass"/></svg></span>Grass</span>
+            <span class="type-badge sm t-bug"><span class="ticon"><svg><use href="#t-bug"/></svg></span>Bug</span>
+          </div>
+        </div>
+        <div class="effrow">
+          <div class="effmult" style="background:var(--eff-zero)">0×</div>
+          <div class="efftypes"><span class="type-badge sm t-ground"><span class="ticon"><svg><use href="#t-ground"/></svg></span>Ground</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Evolution chain</h3>
+        <div class="evo">
+          <div class="estage"><div class="mon"><svg><use href="#mon-spark"/></svg></div><b>Charmander</b></div>
+          <div class="earrow"><svg><use href="#ui-arrow-right"/></svg><span>Lv. 16</span></div>
+          <div class="estage"><div class="mon"><svg><use href="#mon-leaf"/></svg></div><b>Charmeleon</b></div>
+          <div class="earrow"><svg><use href="#ui-arrow-right"/></svg><span>Lv. 36</span></div>
+          <div class="estage current"><div class="mon" style="background:#FDE3D2"><svg><use href="#mon-blaze"/></svg></div><b>Charizard</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottomnav">
+    <div class="nbtn prev">
+      <span class="chev"><svg><use href="#ui-chevron-left"/></svg></span>
+      <span class="mon"><svg><use href="#mon-leaf"/></svg></span>
+      <span><small>Previous</small><b>Charmeleon</b></span>
+    </div>
+    <div class="nbtn next">
+      <span class="chev"><svg><use href="#ui-chevron-right"/></svg></span>
+      <span class="mon"><svg><use href="#mon-aqua"/></svg></span>
+      <span><small>Next</small><b>Squirtle</b></span>
+    </div>
+  </div>
+</div>

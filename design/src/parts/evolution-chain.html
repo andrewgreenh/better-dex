@@ -1,0 +1,78 @@
+<!-- @dsCard group="Components" name="Evolution chain" subtitle="Linear + branching layouts, tappable stages with conditions" -->
+<style>
+  .evo-card { max-width: 720px; }
+  .evo-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .evo-stage {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    padding: 12px; border-radius: var(--r-md);
+    min-width: 120px;
+  }
+  .evo-stage .mon { width: 96px; height: 96px; background: var(--surface-2); }
+  .evo-stage.current { background: #FFF1EC; outline: 3px solid var(--poke-red); }
+  .evo-stage b { font-size: 16px; font-weight: 800; }
+  .evo-stage small { font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+  .evo-arrow {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    min-width: 84px; padding: 0 4px;
+  }
+  .evo-arrow svg { width: 30px; height: 30px; stroke: var(--ink-soft); }
+  .evo-arrow span {
+    font-size: 12px; font-weight: 800; color: var(--ink);
+    background: var(--surface-2); border-radius: 999px; padding: 4px 10px; white-space: nowrap;
+  }
+  .evo-branch { display: flex; flex-direction: column; gap: 4px; }
+  .evo-branch .branch-row { display: flex; align-items: center; }
+</style>
+
+<div class="card evo-card">
+  <h3>Evolution chain</h3>
+  <div class="evo-row">
+    <div class="evo-stage">
+      <div class="mon"><svg><use href="#mon-spark"/></svg></div>
+      <b>Charmander</b><small>#0004</small>
+    </div>
+    <div class="evo-arrow">
+      <svg><use href="#ui-arrow-right"/></svg>
+      <span>Lv. 16</span>
+    </div>
+    <div class="evo-stage">
+      <div class="mon"><svg><use href="#mon-leaf"/></svg></div>
+      <b>Charmeleon</b><small>#0005</small>
+    </div>
+    <div class="evo-arrow">
+      <svg><use href="#ui-arrow-right"/></svg>
+      <span>Lv. 36</span>
+    </div>
+    <div class="evo-stage current">
+      <div class="mon" style="background:#FDE3D2"><svg><use href="#mon-blaze"/></svg></div>
+      <b>Charizard</b><small>#0006 · you are here</small>
+    </div>
+  </div>
+</div>
+
+<div class="card evo-card" style="margin-top:16px">
+  <h3>Branching example (Eevee)</h3>
+  <div class="evo-row">
+    <div class="evo-stage current">
+      <div class="mon" style="background:#FFF3D6"><svg><use href="#mon-spark"/></svg></div>
+      <b>Eevee</b><small>#0133</small>
+    </div>
+    <div class="evo-branch">
+      <div class="branch-row">
+        <div class="evo-arrow"><svg><use href="#ui-arrow-right"/></svg><span>Water Stone</span></div>
+        <div class="evo-stage"><div class="mon" style="width:72px;height:72px"><svg><use href="#mon-aqua"/></svg></div><b>Vaporeon</b></div>
+      </div>
+      <div class="branch-row">
+        <div class="evo-arrow"><svg><use href="#ui-arrow-right"/></svg><span>Thunder Stone</span></div>
+        <div class="evo-stage"><div class="mon" style="width:72px;height:72px"><svg><use href="#mon-spark"/></svg></div><b>Jolteon</b></div>
+      </div>
+      <div class="branch-row">
+        <div class="evo-arrow"><svg><use href="#ui-arrow-right"/></svg><span>Fire Stone</span></div>
+        <div class="evo-stage"><div class="mon" style="width:72px;height:72px"><svg><use href="#mon-blaze"/></svg></div><b>Flareon</b></div>
+      </div>
+    </div>
+  </div>
+</div>
+<p style="margin-top:14px;font-size:13px;color:var(--ink-soft);font-weight:600;max-width:720px;">
+  Every stage is a tap target that navigates to that Pokémon. The current Pokémon is highlighted in red. Branching chains (Eevee) stack vertically; on phones the whole chain scrolls horizontally.
+</p>
