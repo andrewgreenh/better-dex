@@ -784,6 +784,40 @@ img {
   background: var(--eff-zero);
 }
 
+/* Row/column highlighting: hover previews, tap pins */
+.matrix td,
+.matrix th {
+  cursor: pointer;
+  transition: opacity 0.12s, box-shadow 0.12s;
+}
+
+.matrix .corner {
+  cursor: default;
+}
+
+.matrix td.dim {
+  opacity: 0.3;
+}
+
+/* Sticky row headers keep their solid background; dim only their content */
+.matrix th.dim > * {
+  opacity: 0.3;
+}
+
+.matrix td.hl.m-1 {
+  background: #d3dcea;
+}
+
+.matrix td.hl-cross {
+  box-shadow: 0 0 0 3px var(--ink);
+  position: relative;
+  z-index: 2;
+}
+
+.matrix td.hl-cross.m-1 {
+  background: #d3dcea;
+}
+
 @media (max-width: 640px) {
   .matrix .corner {
     min-width: 44px;
