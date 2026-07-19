@@ -145,6 +145,15 @@ export function SpeakerIcon() {
   );
 }
 
+export function DownloadIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <path d="M12 3v11m0 0-5-5m5 5 5-5" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4 17v2.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V17" strokeWidth="2.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function GridIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

@@ -199,6 +199,15 @@ img {
     inset 0 -3px 0 rgba(0, 0, 0, 0.15);
 }
 
+button.type-badge {
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+button.type-badge:active {
+  transform: scale(0.94);
+}
+
 .type-badge .ticon {
   width: 30px;
   height: 30px;
@@ -1048,6 +1057,117 @@ img {
   font-size: 10px;
   font-weight: 700;
   color: var(--ink-soft);
+}
+
+/* ============ Offline & Downloads ============ */
+.offline-panel {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+  padding: 20px;
+  max-width: 620px;
+  display: grid;
+  gap: 14px;
+}
+
+.offline-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.offline-label {
+  flex: none;
+  width: 100px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+
+.offline-bar {
+  flex: 1;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.offline-bar.big {
+  height: 18px;
+}
+
+.offline-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--eff-half);
+  transition: width 0.3s;
+}
+
+.offline-count {
+  flex: none;
+  min-width: 92px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.offline-count.complete {
+  color: var(--eff-half);
+}
+
+.offline-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.offline-download {
+  min-height: var(--tap-min);
+  border-radius: 999px;
+  background: var(--poke-red);
+  color: #fff;
+  font-weight: 800;
+  font-size: 16px;
+  padding: 0 24px;
+  box-shadow: var(--shadow-1);
+  justify-self: start;
+}
+
+.offline-download:active {
+  transform: scale(0.97);
+}
+
+.offline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.offline-reset {
+  min-height: var(--tap-min);
+  border-radius: 999px;
+  border: 3px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-weight: 800;
+  font-size: 15px;
+  padding: 0 20px;
+}
+
+.offline-reset:active {
+  transform: scale(0.97);
+}
+
+.offline-note {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  max-width: 620px;
+  line-height: 1.45;
 }
 
 /* ============ Search overlay ============ */

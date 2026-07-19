@@ -1,13 +1,22 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
-import { MatrixIcon, PokeballIcon } from "@/components/icons";
+import { DownloadIcon, MatrixIcon, PokeballIcon } from "@/components/icons";
 import { ListLink } from "@/components/ListLink";
+import { PwaSetup } from "@/components/PwaSetup";
 import { Search } from "@/components/Search";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Better Dex",
   description: "Ein Pokédex zum Entdecken: Typen, Stärken, Schwächen und Entwicklungen aller Pokémon.",
+  appleWebApp: {
+    capable: true,
+    title: "Better Dex",
+    statusBarStyle: "default",
+  },
+  icons: {
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
@@ -33,10 +42,14 @@ export default function RootLayout({
               <MatrixIcon />
               <span>Typen</span>
             </Link>
+            <Link href="/offline" className="nav-pill" aria-label="Offline und Downloads">
+              <DownloadIcon />
+            </Link>
           </nav>
           <Search />
         </header>
         {children}
+        <PwaSetup />
       </body>
     </html>
   );

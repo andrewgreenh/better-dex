@@ -10,6 +10,9 @@ Ein kinderfreundlicher Pokédex zum Entdecken — optimiert für iPad und Smartp
 - Entwicklungsketten inkl. Verzweigungen (Evoli!) mit deutschen Bedingungen
 - Blättern wie im Bilderbuch: Zurück/Weiter mit Vorschaubild
 - Clientseitige Suche über die deutschen Namen
+- Vorlesen von Namen und Typen (Web Speech API, deutsch)
+- Offline-fähige PWA: Seiten + Pixel-Bilder werden automatisch gespeichert, das große
+  Artwork optional per Download-Button („Offline &amp; Downloads")
 
 **Tech**
 
