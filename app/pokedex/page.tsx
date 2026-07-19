@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { HighlightFromHash } from "@/components/HighlightFromHash";
 import { getGermanNames, spriteUrl } from "@/lib/pokeapi";
 
 export const metadata: Metadata = {
@@ -15,12 +16,13 @@ export default async function PokedexPage() {
 
   return (
     <main className="content-page">
+      <HighlightFromHash />
       <div className="page-head">
         <h1>Alle Pokémon</h1>
       </div>
       <div className="dex-grid">
         {entries.map((entry) => (
-          <Link key={entry.id} className="dex-cell" href={`/pokemon/${entry.id}`}>
+          <Link key={entry.id} id={`p-${entry.id}`} className="dex-cell" href={`/pokemon/${entry.id}`}>
             <Image src={spriteUrl(entry.id)} alt="" width={56} height={56} />
             <b>{entry.name}</b>
             <span>#{String(entry.id).padStart(4, "0")}</span>

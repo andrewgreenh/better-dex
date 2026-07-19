@@ -856,6 +856,22 @@ img {
   box-shadow: var(--shadow-2);
 }
 
+/* Cell of the Pokémon we arrived from (via /pokedex#p-<id>) */
+.dex-cell {
+  scroll-margin: 100px;
+}
+
+.dex-cell:target,
+.dex-cell.is-target {
+  outline: 3px solid var(--poke-red);
+  background: #fff1ec;
+}
+
+.dex-cell:target span,
+.dex-cell.is-target span {
+  color: var(--poke-red);
+}
+
 .dex-cell:active {
   transform: scale(0.95);
 }

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
-import { GridIcon, MatrixIcon, PokeballIcon } from "@/components/icons";
+import { MatrixIcon, PokeballIcon } from "@/components/icons";
+import { ListLink } from "@/components/ListLink";
 import { Search } from "@/components/Search";
 import "./globals.css";
 
@@ -27,10 +28,7 @@ export default function RootLayout({
             <span className="logo-text">Better Dex</span>
           </Link>
           <nav className="top-links" aria-label="Hauptnavigation">
-            <Link href="/pokedex" className="nav-pill">
-              <GridIcon />
-              <span>Liste</span>
-            </Link>
+            <ListLink />
             <Link href="/typen" className="nav-pill">
               <MatrixIcon />
               <span>Typen</span>
