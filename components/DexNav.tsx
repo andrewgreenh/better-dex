@@ -13,7 +13,7 @@ export function DexNav({ prev, next }: { prev: NavTarget; next: NavTarget }) {
         <span className="preview">
           <Image src={prev.sprite} alt="" width={48} height={48} />
         </span>
-        <span>
+        <span className="txt">
           <small>Zurück</small>
           <b>{prev.name}</b>
         </span>
@@ -25,7 +25,7 @@ export function DexNav({ prev, next }: { prev: NavTarget; next: NavTarget }) {
         <span className="preview">
           <Image src={next.sprite} alt="" width={48} height={48} />
         </span>
-        <span>
+        <span className="txt">
           <small>Weiter</small>
           <b>{next.name}</b>
         </span>

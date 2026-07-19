@@ -552,7 +552,8 @@ img {
 }
 
 .nav-btn {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -563,6 +564,17 @@ img {
   min-height: 64px;
   box-shadow: var(--shadow-1);
   transition: transform 0.1s;
+}
+
+.nav-btn .txt {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.nav-btn .txt b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nav-btn:active {
@@ -612,8 +624,58 @@ img {
 }
 
 .nav-btn b {
+  display: block;
   font-size: 16px;
   font-weight: 800;
+}
+
+/* Smaller phones: tighter buttons */
+@media (max-width: 560px) {
+  .dex-nav {
+    gap: 8px;
+  }
+
+  .nav-btn {
+    gap: 7px;
+    padding: 5px 10px;
+    min-height: 56px;
+    border-width: 2px;
+  }
+
+  .nav-btn .chev {
+    width: 20px;
+    height: 20px;
+  }
+
+  .nav-btn .preview {
+    width: 44px;
+    height: 44px;
+  }
+
+  .nav-btn .preview img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .nav-btn small {
+    font-size: 10px;
+    letter-spacing: 0.6px;
+  }
+
+  .nav-btn b {
+    font-size: 14px;
+  }
+}
+
+/* Very small screens: stack the two buttons */
+@media (max-width: 360px) {
+  .dex-nav {
+    flex-wrap: wrap;
+  }
+
+  .nav-btn {
+    flex-basis: 100%;
+  }
 }
 
 /* ============ Content pages (Typen, Pokédex-Liste) ============ */
