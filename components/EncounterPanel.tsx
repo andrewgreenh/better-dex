@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import type { EncounterMap } from "@/lib/pokeapi";
-import { DEFAULT_VERSION, GENERATIONS, versionLabel } from "@/lib/generations";
+import { DEFAULT_VERSION, GENERATIONS, hasEncounterData, versionLabel } from "@/lib/generations";
 
 const STORAGE_KEY = "betterdex:version";
 
@@ -39,6 +39,9 @@ export function EncounterPanel({ encounters }: { encounters: EncounterMap }) {
 
   const areas = encounters[version] ?? [];
   const availableIn = Object.keys(encounters);
+  // For games our data source doesn't cover, an empty list means "unknown",
+  // not "not catchable" — say so honestly instead of claiming it's uncatchable.
+  const noData = areas.length === 0 && !hasEncounterData(version);
 
   return (
     <section className="panel" aria-label="Fundorte">
@@ -72,7 +75,9 @@ export function EncounterPanel({ encounters }: { encounters: EncounterMap }) {
         </ul>
       ) : (
         <p className="enc-empty">
-          In {versionLabel(version)} nicht in der Wildnis zu fangen.
+          {noData
+            ? `Für ${versionLabel(version)} liegen leider keine Fangdaten vor.`
+            : `In ${versionLabel(version)} nicht in der Wildnis zu fangen.`}
           {availableIn.length > 0 && <> Fangbar in: {availableIn.map(versionLabel).join(", ")}.</>}
         </p>
       )}

@@ -108,8 +108,29 @@ export const GENERATIONS: Generation[] = [
   },
 ];
 
-/** Default selection before the user picks a game (newest generation). */
-export const DEFAULT_VERSION = "scarlet";
+/**
+ * Default game shown before the user picks one. Must be a game that actually
+ * has encounter data (see below), otherwise every Pokémon looks uncatchable.
+ */
+export const DEFAULT_VERSION = "sword";
+
+// PokeAPI has no wild-encounter data for these games — a gap in the data
+// source, not the games themselves (you can absolutely catch Pokémon in them).
+// Verified July 2026: BDSP, Legends: Arceus and Scarlet/Violet return no
+// encounters for any Pokémon, so an empty result means "unknown", not "not
+// catchable". Sword/Shield and Let's Go do have data.
+const VERSIONS_WITHOUT_ENCOUNTER_DATA = new Set([
+  "brilliant-diamond",
+  "shining-pearl",
+  "legends-arceus",
+  "scarlet",
+  "violet",
+]);
+
+/** Whether our data source knows any wild encounters for this game at all. */
+export function hasEncounterData(slug: string): boolean {
+  return !VERSIONS_WITHOUT_ENCOUNTER_DATA.has(slug);
+}
 
 const LABEL_BY_SLUG: Record<string, string> = Object.fromEntries(
   GENERATIONS.flatMap((gen) => gen.versions.map((v) => [v.slug, v.label])),
