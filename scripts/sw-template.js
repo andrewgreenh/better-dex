@@ -8,10 +8,16 @@ const CORE = ["/", "/pokedex", "/typen", "/offline", "/api/search-index", "/mani
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches
-      .open(PAGE_CACHE)
-      .then((cache) => cache.addAll(CORE))
-      .then(() => self.skipWaiting()),
+    (async () => {
+      const cache = await caches.open(PAGE_CACHE);
+      await Promise.all(
+        CORE.map(async (url) => {
+          const response = await fetch(url);
+          if (response.ok) await cache.put(url, await unredirected(response));
+        }),
+      );
+      await self.skipWaiting();
+    })(),
   );
 });
 
@@ -82,7 +88,7 @@ async function fillCache(includeArtwork) {
             try {
               const request = job.external ? new Request(url, { mode: "cors" }) : url;
               const response = await fetch(request);
-              if (response.ok) await job.cache.put(url, response);
+              if (response.ok) await job.cache.put(url, await unredirected(response));
               else failed += 1;
             } catch {
               failed += 1;
@@ -150,12 +156,26 @@ function stripSearch(url) {
   return parsed.href;
 }
 
+/**
+ * Safari refuses navigation responses with the `redirected` flag when they
+ * come from a service worker ("Response served by service worker has
+ * redirections"). Re-wrap such responses before caching them.
+ */
+async function unredirected(response) {
+  if (!response.redirected) return response;
+  return new Response(await response.clone().blob(), {
+    status: 200,
+    statusText: "OK",
+    headers: response.headers,
+  });
+}
+
 async function handleNavigate(request) {
   const cache = await caches.open(PAGE_CACHE);
   const cached = await cache.match(request.url, { ignoreSearch: true });
   const networkPromise = fetch(request)
-    .then((response) => {
-      if (response.ok) cache.put(stripSearch(request.url), response.clone());
+    .then(async (response) => {
+      if (response.ok) await cache.put(stripSearch(request.url), await unredirected(response.clone()));
       return response;
     })
     .catch(() => null);
