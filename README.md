@@ -11,13 +11,13 @@ Ein kinderfreundlicher Pokédex zum Entdecken — optimiert für iPad und Smartp
 - Blättern wie im Bilderbuch: Zurück/Weiter mit Vorschaubild
 - Clientseitige Suche über die deutschen Namen
 - Vorlesen von Namen und Typen (Web Speech API, deutsch)
-- Offline-fähige PWA: Seiten + Pixel-Bilder werden automatisch gespeichert, das große
+- Offline-fähige PWA: App, Daten + Pixel-Bilder werden automatisch gespeichert, das große
   Artwork optional per Download-Button („Offline &amp; Downloads")
 
 **Tech**
 
-- Next.js (App Router, [Cache Components](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents)), vollständig statisch gebaut
-- `generateStaticParams` für alle Pokémon; Daten von [PokeAPI](https://pokeapi.co) zur Build-Zeit
+- Vite + React (SPA), vollständig statisch gebaut
+- Alle Daten von [PokeAPI](https://pokeapi.co) zur Build-Zeit in ein JSON-Bundle generiert
 - Deutsche Namen aus der PokeAPI-CSV (`pokemon_species_names.csv`, Sprache 6); alle anderen Sprachen werden verworfen
 - Typen-Effektivität als statische Spielkonstante im Code (keine API-Calls)
 

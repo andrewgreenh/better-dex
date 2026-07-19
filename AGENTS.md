@@ -1,5 +1,10 @@
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+# Better Dex (Vite variant)
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
+A fully static, offline-first PWA: Vite + plain React + react-router. All
+Pokédex data is generated at build time into one JSON bundle
+(`scripts/generate-data.mjs` → `src/generated/dex.json`) and loaded once at
+startup — the client never talks to PokeAPI. There is no server rendering.
+
+- `npm run dev` — dev server (generates the data bundle on first run)
+- `npm run build` — data + typecheck + bundle + service worker (`dist/`)
+- `npm run data` — force-refresh the data bundle from PokeAPI
