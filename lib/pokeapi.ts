@@ -1,4 +1,5 @@
 import { cacheLife } from "next/cache";
+import { normalizeVersion } from "./generations";
 import { computeEffectiveness, type EffectivenessBucket, type TypeName } from "./types";
 
 const API = "https://pokeapi.co/api/v2";
@@ -32,12 +33,23 @@ const TYPE_BY_ID: Record<number, TypeName> = {
 
 const GERMAN_LANGUAGE_ID = 6;
 
+/** The six base stats, in canonical game order. */
+export interface StatSet {
+  hp: number;
+  attack: number;
+  defense: number;
+  spAttack: number;
+  spDefense: number;
+  speed: number;
+}
+
 export interface Variant {
   key: string;
   label: string;
   image: string;
   types: TypeName[];
   effectiveness: EffectivenessBucket[];
+  stats: StatSet;
 }
 
 export interface EvolutionNode {
@@ -132,7 +144,26 @@ interface ApiSpecies {
 interface ApiPokemon {
   id: number;
   types: { slot: number; type: { name: string } }[];
+  stats: { base_stat: number; stat: { name: string } }[];
   sprites: { other?: { ["official-artwork"]?: { front_default?: string | null } } };
+}
+
+const STAT_KEY: Record<string, keyof StatSet> = {
+  hp: "hp",
+  attack: "attack",
+  defense: "defense",
+  "special-attack": "spAttack",
+  "special-defense": "spDefense",
+  speed: "speed",
+};
+
+function toStatSet(stats: ApiPokemon["stats"]): StatSet {
+  const set: StatSet = { hp: 0, attack: 0, defense: 0, spAttack: 0, spDefense: 0, speed: 0 };
+  for (const entry of stats) {
+    const key = STAT_KEY[entry.stat.name];
+    if (key) set[key] = entry.base_stat;
+  }
+  return set;
 }
 
 interface ApiChainLink {
@@ -266,6 +297,7 @@ export async function getPokemonPage(id: number): Promise<PokemonPage> {
         image: pokemon.sprites.other?.["official-artwork"]?.front_default ?? artworkUrl(pokemon.id),
         types,
         effectiveness: computeEffectiveness(types),
+        stats: toStatSet(pokemon.stats),
       };
     }),
   );
@@ -292,4 +324,68 @@ export async function getPokemonPage(id: number): Promise<PokemonPage> {
     prev: { id: prevId, name: names[prevId], sprite: spriteUrl(prevId) },
     next: { id: nextId, name: names[nextId], sprite: spriteUrl(nextId) },
   };
+}
+
+interface ApiEncounter {
+  location_area: { name: string; url: string };
+  version_details: { max_chance: number; version: { name: string } }[];
+}
+
+interface ApiLocalizedNames {
+  names: { name: string; language: { name: string } }[];
+  location?: { url: string };
+}
+
+function germanName(entry: ApiLocalizedNames): string | undefined {
+  return entry.names.find((n) => n.language.name === "de")?.name;
+}
+
+/** Resolve a location-area URL to a German place name, cached forever per area. */
+async function getGermanArea(url: string, fallback: string): Promise<string> {
+  "use cache";
+  cacheLife("max");
+  const area = await fetchJson<ApiLocalizedNames>(url);
+  const areaName = germanName(area);
+  if (areaName) return areaName;
+  if (area.location) {
+    const location = await fetchJson<ApiLocalizedNames>(area.location.url);
+    const locationName = germanName(location);
+    if (locationName) return locationName;
+  }
+  return prettifyItem(fallback);
+}
+
+/** German catch locations grouped by game version slug (e.g. "scarlet" → ["Route 2", …]). */
+export type EncounterMap = Record<string, string[]>;
+
+/** Where a Pokémon can be caught, per game version, with German location names. */
+export async function getEncounters(id: number): Promise<EncounterMap> {
+  "use cache";
+  cacheLife("max");
+
+  const encounters = await fetchJson<ApiEncounter[]>(`${API}/pokemon/${id}/encounters`);
+
+  // Resolve each distinct area once, then fan the German name out to every version.
+  const areaUrls = [...new Set(encounters.map((e) => e.location_area.url))];
+  const nameByUrl = new Map<string, string>();
+  await Promise.all(
+    areaUrls.map(async (url) => {
+      const slug = encounters.find((e) => e.location_area.url === url)!.location_area.name;
+      nameByUrl.set(url, await getGermanArea(url, slug));
+    }),
+  );
+
+  const byVersion: Record<string, Set<string>> = {};
+  for (const encounter of encounters) {
+    const areaName = nameByUrl.get(encounter.location_area.url)!;
+    for (const detail of encounter.version_details) {
+      const version = normalizeVersion(detail.version.name);
+      if (!version) continue;
+      (byVersion[version] ??= new Set()).add(areaName);
+    }
+  }
+
+  return Object.fromEntries(
+    Object.entries(byVersion).map(([version, areas]) => [version, [...areas].sort()]),
+  );
 }

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { DexNav } from "@/components/DexNav";
 import { EvolutionChain } from "@/components/EvolutionChain";
 import { PokemonView } from "@/components/PokemonView";
-import { getAllSpeciesIds, getGermanNames, getPokemonPage } from "@/lib/pokeapi";
+import { getAllSpeciesIds, getEncounters, getGermanNames, getPokemonPage } from "@/lib/pokeapi";
 
 export async function generateStaticParams() {
   const ids = await getAllSpeciesIds();
@@ -29,7 +29,7 @@ export default async function PokemonPage({ params }: { params: Promise<{ id: st
   const names = await getGermanNames();
   if (!Number.isInteger(id) || !names[id]) notFound();
 
-  const page = await getPokemonPage(id);
+  const [page, encounters] = await Promise.all([getPokemonPage(id), getEncounters(id)]);
 
   return (
     <main>
@@ -38,6 +38,7 @@ export default async function PokemonPage({ params }: { params: Promise<{ id: st
         name={page.name}
         dexNo={`#${String(page.id).padStart(4, "0")}`}
         variants={page.variants}
+        encounters={encounters}
         evolution={<EvolutionChain root={page.evolution} currentId={page.id} />}
       />
     </main>

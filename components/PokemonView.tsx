@@ -2,15 +2,19 @@
 
 import Image from "next/image";
 import { useState, type ReactNode } from "react";
-import type { Variant } from "@/lib/pokeapi";
+import type { EncounterMap, Variant } from "@/lib/pokeapi";
 import { EffectivenessPanel } from "./EffectivenessPanel";
+import { EncounterPanel } from "./EncounterPanel";
 import { SpeakButton } from "./SpeakButton";
+import { StatsChart } from "./StatsChart";
 import { TypeBadge } from "./TypeBadge";
 
 interface Props {
   name: string;
   dexNo: string;
   variants: Variant[];
+  /** Catch locations per game version, independent of the selected variant. */
+  encounters: EncounterMap;
   /** Server-rendered evolution chain, independent of the selected variant. */
   evolution: ReactNode;
 }
@@ -19,7 +23,7 @@ interface Props {
  * Hero + effectiveness with client-side variant switching:
  * Mega/Gigadynamax forms swap artwork, typing, and effectiveness live.
  */
-export function PokemonView({ name, dexNo, variants, evolution }: Props) {
+export function PokemonView({ name, dexNo, variants, encounters, evolution }: Props) {
   const [activeKey, setActiveKey] = useState(variants[0].key);
   const active = variants.find((variant) => variant.key === activeKey) ?? variants[0];
   const displayName = active.label === "Normal" ? name : `${active.label}-${name}`;
@@ -64,6 +68,8 @@ export function PokemonView({ name, dexNo, variants, evolution }: Props) {
       <div className="side-col">
         <EffectivenessPanel name={displayName} buckets={active.effectiveness} />
         {evolution}
+        <StatsChart stats={active.stats} />
+        <EncounterPanel encounters={encounters} />
       </div>
     </div>
   );
