@@ -26,8 +26,8 @@ const TYPE_BY_ID: Record<number, TypeName> = {
   14: "psychic",
   15: "ice",
   16: "dragon",
-  17: "fairy",
-  18: "dark",
+  17: "dark",
+  18: "fairy",
 };
 
 const GERMAN_LANGUAGE_ID = 6;
