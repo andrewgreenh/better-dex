@@ -132,7 +132,7 @@ export function OfflineManager() {
       ) : (
         <div className="offline-actions">
           <button type="button" className="offline-download" onClick={downloadAll}>
-            Alle Bilder herunterladen (ca. 250 MB)
+            Alle Bilder herunterladen (ca. 500 MB)
           </button>
           <button type="button" className="offline-reset" onClick={resetCache}>
             Cache zurücksetzen

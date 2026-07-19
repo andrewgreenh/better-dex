@@ -35,9 +35,35 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-/* ---------- background cache fill (tier 2: pages + sprites, tier 3: artwork) ---------- */
+/* ---------- background cache fill (tier 2: pages + assets + sprites, tier 3: artwork) ---------- */
 
 let filling = false;
+
+/**
+ * The JS/CSS chunk URLs every page type needs, discovered by parsing one
+ * representative page per route (routes share their chunks). Without these a
+ * precached page that was never visited online would render without styling
+ * or hydration when offline.
+ */
+async function staticAssetUrls(manifest) {
+  const routes = ["/", "/pokedex", "/typen", "/offline"];
+  const pokemonPage = manifest.pages.find((url) => url.startsWith("/pokemon/"));
+  if (pokemonPage) routes.push(pokemonPage);
+  const assets = new Set();
+  await Promise.all(
+    routes.map(async (route) => {
+      try {
+        const response = await fetch(route);
+        if (!response.ok) return;
+        const html = await response.text();
+        for (const [url] of html.matchAll(/\/_next\/static\/[^"'\\ >]+/g)) assets.add(url);
+      } catch {
+        // Offline: assets of already-visited pages are in the cache from runtime caching.
+      }
+    }),
+  );
+  return [...assets];
+}
 
 async function getManifest() {
   const response = await fetch(`/precache-manifest.json?v=${VERSION}`);
@@ -64,6 +90,7 @@ async function fillCache(includeArtwork) {
     const imageCache = await caches.open(IMG_CACHE);
 
     const jobs = [
+      { cache: pageCache, urls: await missingUrls(pageCache, await staticAssetUrls(manifest)), external: false },
       { cache: pageCache, urls: await missingUrls(pageCache, manifest.pages), external: false },
       { cache: imageCache, urls: await missingUrls(imageCache, manifest.sprites), external: true },
     ];
@@ -203,11 +230,18 @@ async function handleImage(request, url) {
     if (response.ok) cache.put(request.url, response.clone());
     return response;
   } catch (error) {
-    // Offline artwork fallback: show the pixel sprite of the same Pokémon.
-    const match = url.pathname.match(/official-artwork\/(\d+)\.png$/);
+    // Offline artwork fallback: shiny → normal artwork → pixel sprite of the same Pokémon.
+    const match = url.pathname.match(/official-artwork\/(?:shiny\/)?(\d+)\.png$/);
     if (match) {
-      const sprite = await cache.match(`${SPRITES_BASE}/${match[1]}.png`);
-      if (sprite) return sprite;
+      const fallbacks = [
+        `${SPRITES_BASE}/other/official-artwork/${match[1]}.png`,
+        `${SPRITES_BASE}/${match[1]}.png`,
+      ];
+      for (const fallbackUrl of fallbacks) {
+        if (fallbackUrl === request.url) continue;
+        const fallback = await cache.match(fallbackUrl);
+        if (fallback) return fallback;
+      }
     }
     throw error;
   }
