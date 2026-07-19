@@ -88,7 +88,7 @@ async function fetchJson(url) {
   return JSON.parse(await fetchText(url));
 }
 
-/* ---------- German labels (mirrors src/lib/pokeapi.ts of the Next version) ---------- */
+/* ---------- German labels ---------- */
 
 const ITEMS_DE = {
   "fire-stone": "Feuerstein",

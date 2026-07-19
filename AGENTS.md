@@ -1,4 +1,4 @@
-# Better Dex (Vite variant)
+# Better Dex
 
 A fully static, offline-first PWA: Vite + plain React + react-router. All
 Pokédex data is generated at build time into one JSON bundle
