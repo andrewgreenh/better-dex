@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState, type ReactNode } from "react";
 import type { Variant } from "@/lib/pokeapi";
 import { EffectivenessPanel } from "./EffectivenessPanel";
+import { SpeakButton } from "./SpeakButton";
 import { TypeBadge } from "./TypeBadge";
 
 interface Props {
@@ -27,7 +28,10 @@ export function PokemonView({ name, dexNo, variants, evolution }: Props) {
     <div className="dex-page">
       <div className="hero">
         <div className="hero-top">
-          <h1>{displayName}</h1>
+          <span className="hero-name">
+            <h1>{displayName}</h1>
+            <SpeakButton text={displayName} />
+          </span>
           <span className="dexno">{dexNo}</span>
         </div>
         <div className="hero-types">

@@ -320,6 +320,50 @@ img {
   color: var(--ink-soft);
 }
 
+.hero-name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.speak-btn {
+  flex: none;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--poke-red);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow-1);
+  transition: transform 0.1s;
+}
+
+.speak-btn:active {
+  transform: scale(0.92);
+}
+
+.speak-btn svg {
+  width: 26px;
+  height: 26px;
+}
+
+.speak-btn.speaking {
+  background: #fff1ec;
+  animation: speak-pulse 0.9s ease-in-out infinite;
+}
+
+@keyframes speak-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
 .hero-types {
   display: flex;
   gap: 10px;

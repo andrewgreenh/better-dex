@@ -130,6 +130,21 @@ export function ChevronRightIcon() {
   );
 }
 
+export function SpeakerIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M4 9v6h3.5L13 19.5v-15L7.5 9H4z" />
+      <path
+        d="M16 8.5c1 .9 1.6 2.1 1.6 3.5S17 14.6 16 15.5M18.5 6c1.7 1.5 2.7 3.6 2.7 6s-1 4.5-2.7 6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function GridIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
