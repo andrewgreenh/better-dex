@@ -1264,15 +1264,15 @@ button.type-badge:active {
   padding: 8px 4px 7px;
   text-align: center;
   min-width: 0;
+  /* All ~1000 cells are re-created whenever the list is (re-)entered.
+     Skipping the off-screen ones keeps that cheap enough not to show.
+     82px is the content box of a cell — the 15px padding comes on top. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 82px;
 }
 
 .dex-cell:hover {
   box-shadow: var(--shadow-2);
-}
-
-/* The author display:flex above would defeat the hidden attribute. */
-.dex-cell[hidden] {
-  display: none;
 }
 
 /* Cell of the Pokémon we arrived from (via /pokedex#p-<id>) */

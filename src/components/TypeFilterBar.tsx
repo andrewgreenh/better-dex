@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { TYPE_NAMES_DE, TYPE_ORDER, type TypeName } from "@/lib/types";
 import { TypeIcon } from "./icons";
@@ -14,19 +14,13 @@ function parseTypes(values: string[]): TypeName[] {
 }
 
 /**
- * Type filter for the Pokédex list. Up to two types can be active at once
- * (a third tap replaces the oldest); only Pokémon that have ALL active
- * types stay visible. Filtering toggles `hidden` on the rendered grid cells,
- * so the markup and lazy images stay untouched.
- *
- * The selection lives in the URL, so leaving for a Pokémon page and coming
- * back restores it. Filter taps replace the history entry — otherwise every
- * tap would need its own press of the back button.
+ * The type selection, kept in the URL so leaving for a Pokémon page and
+ * coming back restores it. Filter taps replace the history entry — otherwise
+ * every tap would need its own press of the back button.
  */
-export function TypeFilterBar() {
+export function useTypeFilter() {
   const [params, setParams] = useSearchParams();
   const active = useMemo(() => parseTypes(params.getAll(PARAM)), [params]);
-  const [shown, setShown] = useState<number | null>(null);
 
   const setActive = (next: TypeName[]) => {
     setParams(
@@ -40,6 +34,17 @@ export function TypeFilterBar() {
     );
   };
 
+  return { active, setActive };
+}
+
+/**
+ * Type filter for the Pokédex list. Up to two types can be active at once
+ * (a third tap replaces the oldest); the list renders only Pokémon that have
+ * ALL of them. `shown` is the resulting count, or null while unfiltered.
+ */
+export function TypeFilterBar({ shown }: { shown: number | null }) {
+  const { active, setActive } = useTypeFilter();
+
   const toggle = (type: TypeName) => {
     setActive(
       active.includes(type)
@@ -47,18 +52,6 @@ export function TypeFilterBar() {
         : [...active, type].slice(-2),
     );
   };
-
-  useEffect(() => {
-    const cells = document.querySelectorAll<HTMLElement>(".dex-cell");
-    let visible = 0;
-    for (const cell of cells) {
-      const types = (cell.dataset.types ?? "").split(" ");
-      const match = active.every((type) => types.includes(type));
-      cell.hidden = !match;
-      if (match) visible += 1;
-    }
-    setShown(active.length > 0 ? visible : null);
-  }, [active]);
 
   return (
     <div className="filter-bar" role="group" aria-label="Nach Typ filtern">
