@@ -1,22 +1,50 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { TYPE_NAMES_DE, TYPE_ORDER, type TypeName } from "@/lib/types";
 import { TypeIcon } from "./icons";
+
+/** Query parameter holding the active types, e.g. /pokedex?typ=fire&typ=flying. */
+const PARAM = "typ";
+
+/** Reads the selection back from the URL, ignoring anything hand-edited or stale. */
+function parseTypes(values: string[]): TypeName[] {
+  const known = new Set<string>(TYPE_ORDER);
+  const types = values.filter((type) => known.has(type)) as TypeName[];
+  return [...new Set(types)].slice(0, 2);
+}
 
 /**
  * Type filter for the Pokédex list. Up to two types can be active at once
  * (a third tap replaces the oldest); only Pokémon that have ALL active
- * types stay visible. Filtering toggles `hidden` on the server-rendered
- * grid cells, so the static HTML and lazy images stay untouched.
+ * types stay visible. Filtering toggles `hidden` on the rendered grid cells,
+ * so the markup and lazy images stay untouched.
+ *
+ * The selection lives in the URL, so leaving for a Pokémon page and coming
+ * back restores it. Filter taps replace the history entry — otherwise every
+ * tap would need its own press of the back button.
  */
 export function TypeFilterBar() {
-  const [active, setActive] = useState<TypeName[]>([]);
+  const [params, setParams] = useSearchParams();
+  const active = useMemo(() => parseTypes(params.getAll(PARAM)), [params]);
   const [shown, setShown] = useState<number | null>(null);
 
+  const setActive = (next: TypeName[]) => {
+    setParams(
+      (current) => {
+        const updated = new URLSearchParams(current);
+        updated.delete(PARAM);
+        for (const type of next) updated.append(PARAM, type);
+        return updated;
+      },
+      { replace: true },
+    );
+  };
+
   const toggle = (type: TypeName) => {
-    setActive((current) =>
-      current.includes(type)
-        ? current.filter((t) => t !== type)
-        : [...current, type].slice(-2),
+    setActive(
+      active.includes(type)
+        ? active.filter((t) => t !== type)
+        : [...active, type].slice(-2),
     );
   };
 
