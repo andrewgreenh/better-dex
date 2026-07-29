@@ -1271,6 +1271,12 @@ button.type-badge:active {
   contain-intrinsic-size: auto 82px;
 }
 
+/* The type filter hides cells rather than unmounting them, and `display: flex`
+   above would otherwise beat the UA stylesheet's [hidden] rule. */
+.dex-cell[hidden] {
+  display: none;
+}
+
 .dex-cell:hover {
   box-shadow: var(--shadow-2);
 }

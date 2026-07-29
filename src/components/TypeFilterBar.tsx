@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { startTransition, useMemo, useOptimistic } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useDex } from "@/lib/dex";
 import { TYPE_NAMES_DE, TYPE_ORDER, type TypeName } from "@/lib/types";
 import { TypeIcon } from "./icons";
 
@@ -40,23 +41,48 @@ export function useTypeFilter() {
 /**
  * Type filter for the Pokédex list. Up to two types can be active at once
  * (a third tap replaces the oldest); the list renders only Pokémon that have
- * ALL of them. `shown` is the resulting count, or null while unfiltered.
+ * ALL of them.
+ *
+ * react-router puts every location change inside a startTransition, and the
+ * grid reads that same location — so without the optimistic copy below, React
+ * would hold the *whole* commit (pills included) until all 1025 cells had
+ * re-rendered, and a tap would look ignored for half a second. `useOptimistic`
+ * paints the pressed state on the next frame and drops back to the URL-derived
+ * value once the transition lands, which keeps back/forward working for free.
  */
-export function TypeFilterBar({ shown }: { shown: number | null }) {
+export function TypeFilterBar() {
+  const { pokemon } = useDex();
   const { active, setActive } = useTypeFilter();
+  const [selected, showSelected] = useOptimistic(active, (_, next: TypeName[]) => next);
 
-  const toggle = (type: TypeName) => {
-    setActive(
-      active.includes(type)
-        ? active.filter((t) => t !== type)
-        : [...active, type].slice(-2),
-    );
+  const apply = (next: TypeName[]) => {
+    startTransition(() => {
+      showSelected(next);
+      setActive(next);
+    });
   };
+
+  const toggle = (type: TypeName) =>
+    apply(
+      selected.includes(type)
+        ? selected.filter((t) => t !== type)
+        : [...selected, type].slice(-2),
+    );
+
+  // Counted here rather than passed down from the grid, so the number moves in
+  // the same frame as the pill instead of waiting on the transition.
+  const shown = useMemo(
+    () =>
+      selected.length === 0
+        ? null
+        : pokemon.filter((entry) => selected.every((type) => entry.types.includes(type))).length,
+    [pokemon, selected],
+  );
 
   return (
     <div className="filter-bar" role="group" aria-label="Nach Typ filtern">
       {TYPE_ORDER.map((type) => {
-        const isActive = active.includes(type);
+        const isActive = selected.includes(type);
         return (
           <button
             key={type}
@@ -75,7 +101,7 @@ export function TypeFilterBar({ shown }: { shown: number | null }) {
       {shown !== null && (
         <span className="filter-count">
           {shown} Pokémon
-          <button type="button" className="filter-clear" onClick={() => setActive([])}>
+          <button type="button" className="filter-clear" onClick={() => apply([])}>
             Filter löschen
           </button>
         </span>
