@@ -174,6 +174,17 @@ export function MatrixIcon() {
   );
 }
 
+export function RankingIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 1.1 12.76 2.95 14.76 3.1 13.24 4.4 13.7 6.35 12 5.3 10.3 6.35 10.76 4.4 9.24 3.1 11.24 2.95 12 1.1z" />
+      <rect x="9.5" y="7" width="5" height="14" rx="1.6" />
+      <rect x="16" y="10.5" width="5" height="10.5" rx="1.6" />
+      <rect x="3" y="13.5" width="5" height="7.5" rx="1.6" />
+    </svg>
+  );
+}
+
 export function ArrowRightIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">

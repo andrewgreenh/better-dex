@@ -1,13 +1,14 @@
 import { useLayoutEffect } from "react";
 import { BrowserRouter, Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { DexProvider } from "./DexProvider";
-import { DownloadIcon, MatrixIcon, PokeballIcon } from "./components/icons";
+import { DownloadIcon, MatrixIcon, PokeballIcon, RankingIcon } from "./components/icons";
 import { ListLink } from "./components/ListLink";
 import { PwaSetup } from "./components/PwaSetup";
 import { Search } from "./components/Search";
 import { OfflinePage } from "./pages/OfflinePage";
 import { PokedexPage } from "./pages/PokedexPage";
 import { PokemonPage } from "./pages/PokemonPage";
+import { RanglistePage } from "./pages/RanglistePage";
 import { TypenPage } from "./pages/TypenPage";
 
 /**
@@ -46,6 +47,10 @@ export function App() {
               <MatrixIcon />
               <span>Typen</span>
             </Link>
+            <Link to="/rangliste" className="nav-pill">
+              <RankingIcon />
+              <span>Rangliste</span>
+            </Link>
             <Link to="/offline" className="nav-pill" aria-label="Offline und Downloads">
               <DownloadIcon />
             </Link>
@@ -56,6 +61,7 @@ export function App() {
           <Route path="/" element={<PokedexPage />} />
           <Route path="/pokedex" element={<PokedexPage />} />
           <Route path="/typen" element={<TypenPage />} />
+          <Route path="/rangliste" element={<RanglistePage />} />
           <Route path="/offline" element={<OfflinePage />} />
           <Route path="/pokemon/:id" element={<PokemonPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -9,6 +9,8 @@ Ein kinderfreundlicher Pokédex zum Entdecken — optimiert für iPad und Smartp
 - Stärken/Schwächen aller Angriffs-Typen (4× / 2× / ½× / ¼× / 0×), live pro Variante berechnet
 - Entwicklungsketten inkl. Verzweigungen (Evoli!) mit deutschen Bedingungen
 - Blättern wie im Bilderbuch: Zurück/Weiter mit Vorschaubild
+- Rangliste: alle Pokémon nach einem Basiswert sortiert — dazu „Gesamt" und „Gesamt (relevant)",
+  das den schwächeren der beiden Angriffswerte weglässt
 - Clientseitige Suche über die deutschen Namen
 - Vorlesen von Namen und Typen (Web Speech API, deutsch)
 - Offline-fähige PWA: App, Daten + Pixel-Bilder werden automatisch gespeichert, das große

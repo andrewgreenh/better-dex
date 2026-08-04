@@ -1322,6 +1322,193 @@ button.type-badge:active {
   color: var(--ink-soft);
 }
 
+/* ============ Rangliste ============ */
+/* The value pills reuse .filter-pill, minus the type icon it pads for. */
+.rank-pill {
+  height: 40px;
+  padding: 0 14px;
+  font-size: 14px;
+}
+
+.rank-pill.on {
+  background: var(--poke-red);
+}
+
+.rank-empty {
+  padding: 24px 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.rank-list {
+  display: grid;
+  gap: 8px;
+}
+
+/* Mobile first: place + sprite + name + value on top, bar and the six base
+   stats stacked underneath, so nothing has to shrink below thumb size. */
+.rank-row {
+  display: grid;
+  grid-template-columns: auto 48px minmax(0, 1fr) auto;
+  grid-template-areas:
+    "no img name value"
+    "bar bar bar bar"
+    "stats stats stats stats";
+  align-items: center;
+  column-gap: 10px;
+  row-gap: 7px;
+  background: var(--surface);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-1);
+  padding: 10px 12px;
+  /* Same trick as the grid: 1025 rows, only the visible ones get laid out. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 116px;
+}
+
+.rank-row:active {
+  transform: scale(0.99);
+}
+
+.rank-no {
+  grid-area: no;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--ink-soft);
+}
+
+.rank-no.medal-1 {
+  background: linear-gradient(160deg, #ffe680, #f0b429);
+  color: #4a3200;
+}
+
+.rank-no.medal-2 {
+  background: linear-gradient(160deg, #eef1f6, #c2ccd9);
+  color: #384657;
+}
+
+.rank-no.medal-3 {
+  background: linear-gradient(160deg, #f0c39a, #c8813f);
+  color: #452200;
+}
+
+.rank-row img {
+  grid-area: img;
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+}
+
+.rank-name {
+  grid-area: name;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rank-name b {
+  font-size: 15px;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rank-name span {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.rank-value {
+  grid-area: value;
+  font-size: 21px;
+  font-weight: 900;
+  color: var(--poke-red);
+  font-variant-numeric: tabular-nums;
+}
+
+.rank-bar {
+  grid-area: bar;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.rank-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--poke-yellow), var(--poke-red));
+}
+
+.rank-stats {
+  grid-area: stats;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+
+.rank-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 4px 2px;
+  border-radius: 9px;
+  background: var(--surface-2);
+  font-size: 12.5px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.rank-stat i {
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: 0.3px;
+  color: var(--ink-soft);
+}
+
+/* The stat the list is sorted by. */
+.rank-stat.on {
+  background: var(--poke-red);
+  color: #fff;
+}
+
+.rank-stat.on i {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* The attack stat "Gesamt (relevant)" leaves out. */
+.rank-stat.off {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.rank-stat.off i {
+  text-decoration: none;
+}
+
+/* From tablet width the stats fit beside the name instead of below it. */
+@media (min-width: 720px) {
+  .rank-row {
+    grid-template-columns: auto 48px minmax(120px, 1fr) auto minmax(260px, 320px);
+    grid-template-areas:
+      "no img name value stats"
+      "no img bar  bar   stats";
+    column-gap: 14px;
+    contain-intrinsic-size: auto 78px;
+  }
+}
+
 /* ============ Offline & Downloads ============ */
 .offline-panel {
   background: var(--surface);
