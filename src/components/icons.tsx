@@ -185,6 +185,35 @@ export function RankingIcon() {
   );
 }
 
+export function SwordIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <g strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18.5 2.5h3v3L11 16l-3-3L18.5 2.5z" />
+        <path d="M5.5 2.5h-3v3L13 16l3-3L5.5 2.5z" />
+        <path d="m6.5 15.5-3 3 2 2 3-3M17.5 15.5l3 3-2 2-3-3" />
+      </g>
+    </svg>
+  );
+}
+
+/** Generic impact burst — the typeless "Rempler" has no type glyph of its own. */
+export function ImpactIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="m12 1.5 2.6 5.3 5.4-2.2-2.2 5.4 5.2 2-5.2 2 2.2 5.4-5.4-2.2-2.6 5.3-2.6-5.3-5.4 2.2 2.2-5.4-5.2-2 5.2-2L4 4.6l5.4 2.2L12 1.5z" />
+    </svg>
+  );
+}
+
+export function HeartIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 21s-8.5-5.2-8.5-11A4.9 4.9 0 0 1 12 6.6 4.9 4.9 0 0 1 20.5 10c0 5.8-8.5 11-8.5 11z" />
+    </svg>
+  );
+}
+
 export function ArrowRightIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">

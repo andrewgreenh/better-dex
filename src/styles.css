@@ -103,6 +103,7 @@ img {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex: none;
   font-size: 21px;
   font-weight: 800;
 }
@@ -118,6 +119,7 @@ img {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex: none;
   min-height: var(--tap-min);
   background: var(--surface);
   border-radius: 999px;
@@ -143,15 +145,35 @@ img {
   }
 }
 
+/*
+ * The nav takes whatever room is left between the logo and the search button
+ * and scrolls sideways when that isn't enough — pills keep their full size
+ * and their tap targets instead of squeezing into each other. The vertical
+ * padding is there because `overflow-x` also clips vertically, which would
+ * otherwise cut the pills' drop shadows off; the matching negative margin
+ * keeps the header exactly as tall as before.
+ */
 .top-links {
   display: flex;
   gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 6px 0;
+  margin: -6px 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.top-links::-webkit-scrollbar {
+  display: none;
 }
 
 .nav-pill {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: none;
   min-height: var(--tap-min);
   padding: 0 16px;
   background: var(--surface);
@@ -160,6 +182,7 @@ img {
   font-weight: 800;
   font-size: 15px;
   color: var(--ink-soft);
+  white-space: nowrap;
 }
 
 .nav-pill svg {
@@ -168,17 +191,32 @@ img {
   flex: none;
 }
 
+/* On a phone the pills go icon-only and everything moves closer together, so
+   that all of them still fit without scrolling on a normal-width device. */
 @media (max-width: 520px) {
+  .topbar {
+    gap: 10px;
+    padding: 12px;
+  }
+
   .logo-text {
     display: none;
   }
 
+  .top-links {
+    gap: 6px;
+  }
+
   .nav-pill {
-    padding: 0 13px;
+    padding: 0 12px;
   }
 
   .nav-pill span {
     display: none;
+  }
+
+  .search-open {
+    padding: 0 13px;
   }
 }
 
@@ -1747,4 +1785,851 @@ button.type-badge:active {
   background: var(--poke-red);
   color: #fff;
   font-weight: 800;
+}
+
+/* ============ Kampf (two-player hot seat) ============ */
+:root {
+  --p0: #2f6fd0;
+  --p0-soft: #e2edfd;
+  --p1: #e3350d;
+  --p1-soft: #fde5df;
+}
+
+.battle-page {
+  padding-bottom: 40px;
+}
+
+.p0 {
+  --player: var(--p0);
+  --player-soft: var(--p0-soft);
+}
+
+.p1 {
+  --player: var(--p1);
+  --player-soft: var(--p1-soft);
+}
+
+/* ---- start screen ---- */
+.rules {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 22px;
+  padding: 16px 16px 16px 38px;
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+  max-width: 620px;
+}
+
+.rules li::marker {
+  color: var(--poke-red);
+  font-weight: 800;
+}
+
+.setup-toggles {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 22px;
+  max-width: 620px;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: var(--tap-min);
+  padding: 8px 16px;
+  background: var(--surface);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-1);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.toggle input {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  accent-color: var(--poke-red);
+}
+
+.setup-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.mode-btn {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  min-height: var(--tap-min);
+  padding: 18px 28px;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  font-weight: 700;
+  color: var(--ink-soft);
+  transition: transform 0.12s ease;
+}
+
+.mode-btn b {
+  font-size: 19px;
+  color: var(--ink);
+}
+
+.mode-btn svg {
+  width: 28px;
+  height: 28px;
+}
+
+.mode-btn.primary {
+  background: var(--poke-red);
+  color: #ffd9d0;
+  box-shadow: var(--shadow-2);
+}
+
+.mode-btn.primary b {
+  color: #fff;
+}
+
+.mode-btn:active {
+  transform: scale(0.97);
+}
+
+/* ---- hand-over screen ---- */
+.pass {
+  min-height: 65vh;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: 32px 16px;
+  background: var(--player-soft);
+  border-radius: var(--r-xl);
+  border: 4px solid var(--player);
+}
+
+.pass-kicker {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--player);
+}
+
+.pass h1 {
+  font-size: clamp(24px, 6vw, 38px);
+  font-weight: 800;
+  max-width: 12em;
+  line-height: 1.15;
+}
+
+.pass-note {
+  font-weight: 600;
+  color: var(--ink-soft);
+  max-width: 22em;
+}
+
+.hold-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  gap: 2px;
+  margin-top: 10px;
+  min-width: min(320px, 100%);
+  padding: 20px 32px;
+  border-radius: var(--r-lg);
+  background: var(--player);
+  color: #fff;
+  box-shadow: var(--shadow-2);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.hold-fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform-origin: left;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.hold-btn.holding {
+  transform: scale(0.98);
+}
+
+.hold-label {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.hold-hint {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+/* ---- draft ---- */
+.draft-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border-radius: var(--r-lg);
+  background: var(--player-soft);
+  border: 3px solid var(--player);
+}
+
+.draft-head h1 {
+  font-size: clamp(20px, 4.5vw, 28px);
+  font-weight: 800;
+  color: var(--player);
+}
+
+.draft-head p {
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.draft-team {
+  display: flex;
+  gap: 8px;
+}
+
+.draft-slot {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+.draft-slot.empty {
+  color: var(--ink-soft);
+  font-weight: 800;
+  font-size: 22px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px dashed var(--line);
+}
+
+.draft-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  margin-bottom: 12px;
+  background: var(--surface);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-1);
+}
+
+.draft-search svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  color: var(--ink-soft);
+}
+
+.draft-search input {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--tap-min);
+  border: 0;
+  outline: none;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  color: inherit;
+}
+
+.draft-search-clear {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--poke-red);
+}
+
+.draft-empty {
+  padding: 32px;
+  text-align: center;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.pick-cell {
+  font: inherit;
+  text-align: center;
+}
+
+.pick-cell:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* ---- choosing from your own team ---- */
+.team-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.team-choice {
+  flex: 1 1 140px;
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 14px;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  border: 3px solid transparent;
+  transition: transform 0.12s ease;
+}
+
+.team-choice b {
+  font-size: 19px;
+}
+
+.team-choice img {
+  width: clamp(84px, 22vw, 130px);
+  height: clamp(84px, 22vw, 130px);
+  object-fit: contain;
+}
+
+/* Two dual-type badges are wider than half a phone, and their min-content
+   width would otherwise push the choices to one per row. */
+.team-choice-types {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.team-choice-hp {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.team-choice:active {
+  transform: scale(0.97);
+}
+
+.team-choice:hover {
+  border-color: var(--player);
+}
+
+.team-choice.out {
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.team-picker .page-head h1 {
+  color: var(--player);
+}
+
+.team-picker-note {
+  margin-top: 16px;
+  font-weight: 800;
+  color: var(--player);
+}
+
+/* ---- reveal ---- */
+.reveal {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  text-align: center;
+}
+
+.reveal h1 {
+  font-size: clamp(28px, 7vw, 40px);
+  font-weight: 800;
+}
+
+.reveal-row {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.reveal-side {
+  flex: 1 1 220px;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 16px;
+  border-radius: var(--r-lg);
+  background: var(--player-soft);
+  border: 3px solid var(--player);
+}
+
+.reveal-side img {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+}
+
+.reveal-side b {
+  font-size: 22px;
+}
+
+.reveal-player {
+  font-weight: 800;
+  color: var(--player);
+}
+
+.reveal-types {
+  display: flex;
+  gap: 6px;
+}
+
+.reveal-speed {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.reveal-vs {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 800;
+  box-shadow: var(--shadow-2);
+}
+
+.reveal-first {
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+/* ---- arena ---- */
+.arena {
+  display: grid;
+  gap: 12px;
+}
+
+.board {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  border: 3px solid transparent;
+}
+
+.board.turn {
+  border-color: var(--player);
+  background: var(--player-soft);
+}
+
+.board-info {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+  justify-items: start;
+}
+
+.board-player {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--player);
+}
+
+.board-name {
+  font-size: clamp(20px, 5vw, 26px);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.board-types {
+  display: flex;
+  gap: 6px;
+}
+
+.board-art {
+  width: clamp(96px, 30vw, 170px);
+  height: clamp(96px, 30vw, 170px);
+  object-fit: contain;
+  flex: none;
+}
+
+.hearts {
+  display: flex;
+  gap: 2px;
+}
+
+.heart {
+  display: block;
+  width: 18px;
+  height: 18px;
+  color: var(--poke-red);
+}
+
+.heart svg {
+  width: 100%;
+  height: 100%;
+}
+
+.heart.gone {
+  color: var(--line);
+}
+
+.board-dots {
+  display: flex;
+  gap: 5px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--player);
+}
+
+.dot.out {
+  background: var(--line);
+}
+
+/* ---- attacks ---- */
+.actions {
+  padding: 12px 14px 14px;
+  border-radius: var(--r-lg);
+  background: var(--player-soft);
+  border: 3px solid var(--player);
+}
+
+.actions-turn {
+  margin-bottom: 10px;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--player);
+}
+
+.attack-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Move panels the way the games show them: the type is the colour and the
+   glyph, never a word. No background here on purpose — it comes from the
+   shared .t-* classes further up, which this rule would otherwise override. */
+.attack {
+  flex: 1 1 180px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 2px;
+  min-height: 64px;
+  padding: 10px 16px 10px 10px;
+  border-radius: var(--r-md);
+  color: #fff;
+  box-shadow:
+    var(--shadow-1),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.15);
+  text-align: left;
+  transition: transform 0.12s ease;
+}
+
+.attack .ticon {
+  grid-row: span 2;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.attack .ticon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.attack.t-electric,
+.attack.t-ice,
+.attack.t-ground,
+.attack.t-steel {
+  color: #3a3410;
+}
+
+.attack.t-electric .ticon,
+.attack.t-ice .ticon,
+.attack.t-ground .ticon,
+.attack.t-steel .ticon {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.attack b {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.attack:active {
+  transform: scale(0.97);
+}
+
+.attack.plainmove {
+  background: var(--ink-soft);
+}
+
+.attack-hint {
+  display: inline-block;
+  justify-self: start;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.attack-hint.tone-mega {
+  background: var(--eff-4x);
+  color: #fff;
+}
+
+.attack-hint.tone-super {
+  background: var(--eff-2x);
+  color: #fff;
+}
+
+.attack-hint.tone-weak {
+  background: var(--eff-half);
+  color: #fff;
+}
+
+.attack-hint.tone-none {
+  background: var(--eff-zero);
+  color: #fff;
+}
+
+/* ---- result banner ---- */
+.shout {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 20px 16px;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-2);
+  border: 4px solid var(--tone, var(--line));
+  text-align: center;
+  animation: shout-in 0.18s ease-out;
+}
+
+@keyframes shout-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+}
+
+.shout.tone-mega {
+  --tone: var(--eff-4x);
+}
+
+.shout.tone-super {
+  --tone: var(--eff-2x);
+}
+
+.shout.tone-weak {
+  --tone: var(--eff-half);
+}
+
+.shout.tone-none {
+  --tone: var(--eff-zero);
+}
+
+.shout-move {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+/* The spinning damage die. Its own tone keeps the border neutral while the
+   number is still changing — the colour would give the result away early. */
+.shout.rolling {
+  --tone: var(--poke-yellow);
+}
+
+.die {
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  margin: 4px 0;
+  border-radius: 22px;
+  background: var(--poke-yellow);
+  color: var(--ink);
+  font-size: 54px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  box-shadow:
+    var(--shadow-2),
+    inset 0 -5px 0 rgba(0, 0, 0, 0.15);
+  animation: die-shake 0.18s ease-in-out infinite alternate;
+}
+
+@keyframes die-shake {
+  from {
+    transform: rotate(-6deg) scale(0.97);
+  }
+  to {
+    transform: rotate(6deg) scale(1.03);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .die {
+    animation: none;
+  }
+}
+
+.shout-crit {
+  font-size: clamp(20px, 5vw, 26px);
+  font-weight: 800;
+  color: var(--poke-yellow);
+  -webkit-text-stroke: 1px var(--ink);
+}
+
+.shout-effect {
+  font-size: clamp(24px, 7vw, 36px);
+  font-weight: 800;
+  color: var(--tone, var(--ink));
+  line-height: 1.1;
+}
+
+.shout-damage {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.shout-ko {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--poke-red);
+}
+
+.shout-next {
+  margin-top: 8px;
+  min-height: var(--tap-min);
+  padding: 12px 40px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+/* ---- victory ---- */
+.victory {
+  display: grid;
+  justify-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.victory h1 {
+  font-size: clamp(30px, 8vw, 46px);
+  font-weight: 800;
+  color: var(--player);
+}
+
+.victory-teams {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.victory-team {
+  flex: 1 1 240px;
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border-radius: var(--r-lg);
+  background: var(--player-soft);
+  border: 3px solid var(--player);
+}
+
+.victory-label {
+  font-weight: 800;
+  color: var(--player);
+}
+
+.victory-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.victory-slot {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.victory-slot.out {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.victory-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+@media (max-width: 520px) {
+  .board-art {
+    width: 110px;
+    height: 110px;
+  }
+
+  .heart {
+    width: 15px;
+    height: 15px;
+  }
+
+  .attack {
+    flex-basis: 100%;
+  }
 }
