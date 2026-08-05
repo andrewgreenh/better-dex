@@ -49,16 +49,31 @@ export function useTypeFilter() {
  * re-rendered, and a tap would look ignored for half a second. `useOptimistic`
  * paints the pressed state on the next frame and drops back to the URL-derived
  * value once the transition lands, which keeps back/forward working for free.
+ *
+ * Pass `value`/`onChange` to hold the selection somewhere else instead. The
+ * battle draft does: a filter in the URL would still be there after the
+ * device changes hands, telling the next player what the last one was
+ * looking for.
  */
-export function TypeFilterBar() {
+export function TypeFilterBar({
+  value,
+  onChange,
+  count,
+}: {
+  value?: TypeName[];
+  onChange?: (next: TypeName[]) => void;
+  /** Overrides the count when the caller filters by more than just types. */
+  count?: number;
+} = {}) {
   const { pokemon } = useDex();
-  const { active, setActive } = useTypeFilter();
+  const url = useTypeFilter();
+  const active = value ?? url.active;
   const [selected, showSelected] = useOptimistic(active, (_, next: TypeName[]) => next);
 
   const apply = (next: TypeName[]) => {
     startTransition(() => {
       showSelected(next);
-      setActive(next);
+      (onChange ?? url.setActive)(next);
     });
   };
 
@@ -71,13 +86,14 @@ export function TypeFilterBar() {
 
   // Counted here rather than passed down from the grid, so the number moves in
   // the same frame as the pill instead of waiting on the transition.
-  const shown = useMemo(
+  const matching = useMemo(
     () =>
       selected.length === 0
         ? null
         : pokemon.filter((entry) => selected.every((type) => entry.types.includes(type))).length,
     [pokemon, selected],
   );
+  const shown = matching === null ? null : (count ?? matching);
 
   return (
     <div className="filter-bar" role="group" aria-label="Nach Typ filtern">

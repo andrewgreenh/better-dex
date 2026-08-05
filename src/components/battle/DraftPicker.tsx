@@ -1,8 +1,9 @@
 import { memo, useMemo, useState, type MouseEvent } from "react";
-import { TypeFilterBar, useTypeFilter } from "@/components/TypeFilterBar";
+import { TypeFilterBar } from "@/components/TypeFilterBar";
 import { formatDexNo, spriteUrl, useDex, type DexPokemon } from "@/lib/dex";
 import { PLAYER_NAMES, type PlayerId } from "@/lib/battle";
 import { SearchIcon } from "@/components/icons";
+import type { TypeName } from "@/lib/types";
 
 /** Case- and diacritic-insensitive, same as the header search. */
 function normalize(value: string): string {
@@ -61,7 +62,11 @@ export function DraftPicker({
   onPick: (id: number) => void;
 }) {
   const { pokemon } = useDex();
-  const { active } = useTypeFilter();
+  // Both filters are local and die with the screen. The Pokédex list keeps
+  // its types in the URL so leaving and coming back restores them — here that
+  // would survive the hand-over and show the next player what the last one
+  // was hunting for.
+  const [active, setActive] = useState<TypeName[]>([]);
   const [query, setQuery] = useState("");
 
   const ownIds = useMemo(() => new Set(own), [own]);
@@ -123,7 +128,7 @@ export function DraftPicker({
         )}
       </div>
 
-      <TypeFilterBar />
+      <TypeFilterBar value={active} onChange={setActive} count={shown} />
 
       {shown === 0 ? (
         <p className="draft-empty">Keine Pokémon gefunden. Ändere die Suche oder den Filter.</p>
