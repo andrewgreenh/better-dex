@@ -13,15 +13,6 @@ import { PokemonPage } from "./pages/PokemonPage";
 import { RanglistePage } from "./pages/RanglistePage";
 import { TypenPage } from "./pages/TypenPage";
 
-/** How long a restored row is held in place while the layout settles. */
-const SETTLE_MS = 2500;
-
-/** How often the row's position is checked during that window. */
-const PIN_MS = 16;
-
-/** Any of these means the user is scrolling themselves — stop correcting. */
-const TAKEOVER = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
-
 /**
  * Client-side routing scrolls neither to top nor to anchors on its own:
  * plain navigations reset to the top, hash targets (/pokedex#p-25) are
@@ -59,34 +50,13 @@ function ScrollManager() {
       return;
     }
 
-    // Putting the row back once isn't enough: `content-visibility: auto` lets
-    // the browser keep swapping estimated row heights for measured ones for
-    // more than a second afterwards, and every swap above the viewport drags
-    // everything below it along. So the row is held in place until the layout
-    // has stopped moving — and released the moment the user takes over.
-    // Looked up every tick rather than captured once: React re-renders the
-    // list while the estimates are still settling and hands out a new DOM
-    // node, and a captured reference would quietly go stale.
-    const pin = () => {
-      const row = document.getElementById(anchor.id);
-      if (!row) return;
-      const drift = row.getBoundingClientRect().top - anchor.top;
-      if (Math.abs(drift) >= 1) window.scrollBy(0, drift);
-    };
-    const release = () => {
-      clearInterval(ticker);
-      clearTimeout(timer);
-      for (const event of TAKEOVER) window.removeEventListener(event, release);
-    };
-
-    pin();
-    // A timer rather than requestAnimationFrame: the correction has to keep
-    // running while the tab is in the background too, and rAF is frozen there
-    // — the row would then be left wherever the last re-layout dropped it.
-    const ticker = window.setInterval(pin, PIN_MS);
-    const timer = window.setTimeout(release, SETTLE_MS);
-    for (const event of TAKEOVER) window.addEventListener(event, release, { passive: true });
-    return release;
+    // One correction is enough, and only because the list rows are a fixed
+    // height: the browser's estimate for the rows it skipped is then exactly
+    // right, so nothing shifts underneath afterwards. See .rank-row and
+    // .dex-cell — if those heights ever go back to being content-sized, this
+    // lands in the right place and then slides away again.
+    const row = document.getElementById(anchor.id)!;
+    window.scrollBy(0, row.getBoundingClientRect().top - anchor.top);
   }, [pathname, hash, key]);
   return null;
 }

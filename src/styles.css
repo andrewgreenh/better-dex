@@ -1303,12 +1303,16 @@ button.type-badge:active {
   text-align: center;
   min-width: 0;
   /* All ~1000 cells are re-created whenever the list is (re-)entered.
-     Skipping the off-screen ones keeps that cheap enough not to show.
-     The guess is the full border box (97px measured, 101px when the name
-     wraps) — an estimate that is too small by a padding stacks up into
-     thousands of pixels of phantom page height over a thousand cells. */
+     Skipping the off-screen ones with content-visibility keeps that cheap
+     enough not to show — but then every cell that has never been on screen
+     counts as contain-intrinsic-size tall, and a wrong guess multiplied by a
+     thousand moves the page under your feet. So the height is nailed down
+     rather than estimated: 15px padding + 56px sprite + 2px gaps + a 14px and
+     a 12px line box. Change any of those and change this with them. */
+  height: 99px;
+  overflow: hidden;
   content-visibility: auto;
-  contain-intrinsic-size: auto 97px;
+  contain-intrinsic-size: 99px;
 }
 
 /* The type filter hides cells rather than unmounting them, and `display: flex`
@@ -1349,6 +1353,10 @@ button.type-badge:active {
 
 .dex-cell b {
   font-size: 11.5px;
+  /* Fixed line boxes: "Nidoran♀" pulls its ♀ from a fallback font with taller
+     metrics, and without this the glyph alone makes the cell — and with it the
+     whole grid row — grow. See .dex-cell for why that height has to be exact. */
+  line-height: 14px;
   font-weight: 800;
   max-width: 100%;
   overflow: hidden;
@@ -1358,6 +1366,7 @@ button.type-badge:active {
 
 .dex-cell span {
   font-size: 10px;
+  line-height: 12px;
   font-weight: 700;
   color: var(--ink-soft);
 }
@@ -1402,10 +1411,12 @@ button.type-badge:active {
   border-radius: var(--r-md);
   box-shadow: var(--shadow-1);
   padding: 10px 12px;
-  /* Same trick as the grid: 1025 rows, only the visible ones get laid out.
-     123px measured, 136px when the name wraps onto a second line. */
+  /* Same trick as the grid, and the same deal: the height is fixed so that
+     the estimate below can be exact rather than approximately right. */
+  height: 123px;
+  overflow: hidden;
   content-visibility: auto;
-  contain-intrinsic-size: auto 123px;
+  contain-intrinsic-size: 123px;
 }
 
 .rank-row:active {
@@ -1456,6 +1467,7 @@ button.type-badge:active {
 
 .rank-name b {
   font-size: 15px;
+  line-height: 19px;
   font-weight: 800;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1464,6 +1476,7 @@ button.type-badge:active {
 
 .rank-name span {
   font-size: 11px;
+  line-height: 14px;
   font-weight: 700;
   color: var(--ink-soft);
 }
@@ -1546,8 +1559,9 @@ button.type-badge:active {
       "no img name value stats"
       "no img bar  bar   stats";
     column-gap: 14px;
-    /* Every row is exactly this tall here — nothing wraps. */
-    contain-intrinsic-size: auto 68px;
+    /* The stats move up beside the name, so the row loses two of its lines. */
+    height: 68px;
+    contain-intrinsic-size: 68px;
   }
 }
 
