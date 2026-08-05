@@ -1,6 +1,7 @@
 import { memo, startTransition, useMemo, useOptimistic, type MouseEvent } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { formatDexNo, spriteUrl, useDex, type DexPokemon, type StatSet } from "@/lib/dex";
+import { rememberAnchor } from "@/lib/scroll";
 import {
   METRICS,
   STAT_AXES,
@@ -62,7 +63,7 @@ const Row = memo(function Row({
   const dropped = metric === "totalRelevant" ? otherAttack(stats) : null;
 
   return (
-    <a className="rank-row" href={`/pokemon/${entry.id}`}>
+    <a id={`r-${entry.id}`} className="rank-row" href={`/pokemon/${entry.id}`}>
       <span className={`rank-no${rank <= 3 ? ` medal-${rank}` : ""}`}>{rank}</span>
       <img src={spriteUrl(entry.id)} alt="" width={48} height={48} loading="lazy" decoding="sync" />
       <span className="rank-name">
@@ -97,6 +98,8 @@ export function StatRanking() {
   const { pokemon } = useDex();
   const { metric, setMetric } = useMetric();
   const navigate = useNavigate();
+  // Named apart from the metric `key` the pills map over below.
+  const { key: locationKey } = useLocation();
 
   // The list re-sorts and re-renders on every pick, which react-router runs
   // inside a transition — so the pills would only light up once that landed.
@@ -132,9 +135,13 @@ export function StatRanking() {
   const onClick = (event: MouseEvent<HTMLDivElement>) => {
     if (event.defaultPrevented || event.button !== 0) return;
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    const href = (event.target as Element).closest("a.rank-row")?.getAttribute("href");
-    if (!href) return;
+    const row = (event.target as Element).closest("a.rank-row");
+    const href = row?.getAttribute("href");
+    if (!href || !row) return;
     event.preventDefault();
+    // Anchor the return on this row rather than on a pixel offset — see
+    // lib/scroll for why the offset drifts.
+    rememberAnchor(locationKey, row);
     navigate(href);
   };
 

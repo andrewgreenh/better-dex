@@ -1,5 +1,6 @@
 import { memo, type MouseEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { rememberAnchor } from "@/lib/scroll";
 import { HighlightFromHash } from "@/components/HighlightFromHash";
 import { TypeFilterBar, useTypeFilter } from "@/components/TypeFilterBar";
 import { formatDexNo, spriteUrl, useDex } from "@/lib/dex";
@@ -33,6 +34,7 @@ export function PokedexList() {
   const { pokemon } = useDex();
   const { active } = useTypeFilter();
   const navigate = useNavigate();
+  const { key } = useLocation();
 
   // One handler for the whole grid instead of one per cell. Modified clicks
   // are left alone so cmd/middle-click still open a new tab.
@@ -41,8 +43,11 @@ export function PokedexList() {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const cell = (event.target as Element).closest("a.dex-cell");
     const href = cell?.getAttribute("href");
-    if (!href) return;
+    if (!href || !cell) return;
     event.preventDefault();
+    // Where this cell sat is what we come back to — a pixel offset wouldn't
+    // survive the estimated heights of a thousand skipped cells.
+    rememberAnchor(key, cell);
     navigate(href);
   };
 

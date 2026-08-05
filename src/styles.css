@@ -1304,9 +1304,11 @@ button.type-badge:active {
   min-width: 0;
   /* All ~1000 cells are re-created whenever the list is (re-)entered.
      Skipping the off-screen ones keeps that cheap enough not to show.
-     82px is the content box of a cell — the 15px padding comes on top. */
+     The guess is the full border box (97px measured, 101px when the name
+     wraps) — an estimate that is too small by a padding stacks up into
+     thousands of pixels of phantom page height over a thousand cells. */
   content-visibility: auto;
-  contain-intrinsic-size: auto 82px;
+  contain-intrinsic-size: auto 97px;
 }
 
 /* The type filter hides cells rather than unmounting them, and `display: flex`
@@ -1400,9 +1402,10 @@ button.type-badge:active {
   border-radius: var(--r-md);
   box-shadow: var(--shadow-1);
   padding: 10px 12px;
-  /* Same trick as the grid: 1025 rows, only the visible ones get laid out. */
+  /* Same trick as the grid: 1025 rows, only the visible ones get laid out.
+     123px measured, 136px when the name wraps onto a second line. */
   content-visibility: auto;
-  contain-intrinsic-size: auto 116px;
+  contain-intrinsic-size: auto 123px;
 }
 
 .rank-row:active {
@@ -1543,7 +1546,8 @@ button.type-badge:active {
       "no img name value stats"
       "no img bar  bar   stats";
     column-gap: 14px;
-    contain-intrinsic-size: auto 78px;
+    /* Every row is exactly this tall here — nothing wraps. */
+    contain-intrinsic-size: auto 68px;
   }
 }
 
