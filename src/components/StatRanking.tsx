@@ -1,7 +1,16 @@
-import { memo, startTransition, useMemo, useOptimistic, type MouseEvent } from "react";
+import {
+  memo,
+  startTransition,
+  useLayoutEffect,
+  useMemo,
+  useOptimistic,
+  useRef,
+  useState,
+  type MouseEvent,
+} from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { formatDexNo, spriteUrl, useDex, type DexPokemon, type StatSet } from "@/lib/dex";
-import { rememberAnchor } from "@/lib/scroll";
+import { readAnchor, rememberAnchor } from "@/lib/scroll";
 import {
   METRICS,
   STAT_AXES,
@@ -38,6 +47,42 @@ function useMetric() {
   return { metric, setMetric };
 }
 
+/**
+ * Only the rows around the viewport are ever in the DOM. A pick re-sorts all
+ * 1025 Pokémon, and with every row mounted that meant re-rendering and
+ * physically moving a thousand elements, sprites included — quick on a
+ * desktop, seconds on an iPhone. Windowed, a pick touches a few dozen rows.
+ *
+ * That works because the rows are a fixed height: a row's place follows from
+ * its index alone. The numbers mirror .rank-row and .rank-list in styles.css.
+ */
+const ROW_GAP = 8;
+const ROW_HEIGHT_NARROW = 123;
+const ROW_HEIGHT_WIDE = 68;
+const WIDE_QUERY = "(min-width: 720px)";
+/** Rows kept ready beyond each edge of the screen, for fast flicks. */
+const OVERSCAN = 12;
+/** The window only moves in steps, so most scroll events change nothing. */
+const STEP = 4;
+
+interface RowWindow {
+  start: number;
+  end: number;
+}
+
+function rowPitch(): number {
+  return (window.matchMedia(WIDE_QUERY).matches ? ROW_HEIGHT_WIDE : ROW_HEIGHT_NARROW) + ROW_GAP;
+}
+
+/** The slice of rows to mount when the list's top edge sits at `listTop`. */
+function windowAt(listTop: number, pitch: number, count: number): RowWindow {
+  const first = Math.floor(-listTop / pitch);
+  const last = Math.ceil((window.innerHeight - listTop) / pitch);
+  const start = Math.max(0, Math.floor((first - OVERSCAN) / STEP) * STEP);
+  const end = Math.min(count, Math.ceil((last + OVERSCAN) / STEP) * STEP);
+  return { start: Math.min(start, end), end };
+}
+
 interface RankedEntry {
   entry: DexPokemon;
   stats: StatSet;
@@ -48,7 +93,7 @@ interface RankedEntry {
 /**
  * One ranking row: place, sprite, the value it was sorted by, a bar relative
  * to the leader, and all six base stats so the whole spread is visible at a
- * glance. Memoised — a metric change re-renders 1025 of these.
+ * glance. Memoised, so scrolling only renders the rows that come into range.
  */
 const Row = memo(function Row({
   entry,
@@ -131,6 +176,45 @@ export function StatRanking() {
 
   const top = ranked.length > 0 ? ranked[0].value : 0;
 
+  const listRef = useRef<HTMLDivElement>(null);
+  const [pitch, setPitch] = useState(rowPitch);
+
+  // Coming back from a Pokémon, the tapped row has to be in the very first
+  // render: the ScrollManager looks it up by id to put it back in place, and
+  // at that point nothing has been measured or scrolled yet.
+  const [rows, setRows] = useState<RowWindow>(() => {
+    const anchor = readAnchor(locationKey);
+    const index = anchor ? ranked.findIndex((row) => `r-${row.entry.id}` === anchor.id) : -1;
+    const from = Math.max(0, index);
+    return windowAt(-from * rowPitch(), rowPitch(), ranked.length);
+  });
+
+  const listed = selected !== null;
+  const count = ranked.length;
+  useLayoutEffect(() => {
+    if (!listed) return;
+    const media = window.matchMedia(WIDE_QUERY);
+    const update = () => {
+      const list = listRef.current;
+      if (!list) return;
+      const nextPitch = rowPitch();
+      const next = windowAt(list.getBoundingClientRect().top, nextPitch, count);
+      setPitch(nextPitch);
+      setRows((current) =>
+        current.start === next.start && current.end === next.end ? current : next,
+      );
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    media.addEventListener("change", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      media.removeEventListener("change", update);
+    };
+  }, [listed, count]);
+
   // One handler for the whole list rather than 1025 <Link>s, as in the grid.
   const onClick = (event: MouseEvent<HTMLDivElement>) => {
     if (event.defaultPrevented || event.button !== 0) return;
@@ -164,8 +248,16 @@ export function StatRanking() {
       {selected === null ? (
         <p className="rank-empty">Tippe oben auf einen Wert.</p>
       ) : (
-        <div className="rank-list" onClick={onClick}>
-          {ranked.map((row) => (
+        <div
+          ref={listRef}
+          className="rank-list"
+          onClick={onClick}
+          style={{
+            height: Math.max(0, count * pitch - ROW_GAP),
+            paddingTop: rows.start * pitch,
+          }}
+        >
+          {ranked.slice(rows.start, rows.end).map((row) => (
             <Row
               key={row.entry.id}
               {...row}

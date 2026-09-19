@@ -1390,9 +1390,17 @@ button.type-badge:active {
   color: var(--ink-soft);
 }
 
+/* Windowed: StatRanking mounts only the rows near the viewport, sets the
+   full height and pushes the mounted rows down with padding-top. The gap and
+   the row heights below are mirrored in StatRanking.tsx. */
 .rank-list {
   display: grid;
   gap: 8px;
+  align-content: start;
+  box-sizing: border-box;
+  /* Rows swap out under the viewport on every pick and while scrolling; the
+     browser must not try to follow one of them. */
+  overflow-anchor: none;
 }
 
 /* Mobile first: place + sprite + name + value on top, bar and the six base
